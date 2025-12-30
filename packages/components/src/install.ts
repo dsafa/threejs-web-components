@@ -1,5 +1,5 @@
-import { TWCRenderer } from "./renderer";
+import { RendererElement } from "./elements/rendererElement";
 
 export const install = () => {
-  window.customElements.define("twc-renderer", TWCRenderer);
+  window.customElements.define("twc-renderer", RendererElement);
 };
