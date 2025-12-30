@@ -4,5 +4,9 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "dev": "yarn workspaces foreach --from packages/examples -Rpi run dev",
+    "build": "yarn workspaces foreach --from packages/examples -R run build"
+  }
 }
