@@ -10,7 +10,7 @@ export class RendererElement extends BaseElement {
     this._rootContext = new Context();
   }
 
-  override getContext() {
+  override getRootContext() {
     return this._rootContext;
   }
 

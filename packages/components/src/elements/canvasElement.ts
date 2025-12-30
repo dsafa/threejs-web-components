@@ -1,8 +1,7 @@
-import type { Context } from "../core/context";
-import { Accessor } from "./elementUtils";
 import type { IBaseElement } from "./IBaseElement";
+import { Accessor } from "./elementUtils";
 
-export class BaseElement extends HTMLElement implements IBaseElement {
+export class CanvasElement extends HTMLCanvasElement implements IBaseElement {
   public readonly isBaseElement = true;
 
   private _accessor: Accessor;
@@ -19,11 +18,7 @@ export class BaseElement extends HTMLElement implements IBaseElement {
     this._accessor.clear();
   }
 
-  public getRootContext(): Context | null {
+  public getRootContext() {
     return this._accessor.getRootContext();
-  }
-
-  protected getAncestor(): IBaseElement | null {
-    return this._accessor.getAncestor();
   }
 }
