@@ -24,12 +24,12 @@ export class Context {
     return this._renderer;
   }
 
-  public createScene() {
+  public createScene(scene: Scene) {
     if (this._scene) {
       throw new Error("Scene already exists");
     }
 
-    this._scene = new Scene();
+    this._scene = scene;
     return this._scene;
   }
 }

@@ -1,7 +1,7 @@
 import { Object3D } from "three";
 import { RendererElement } from "./elements/rendererElement";
-import { SceneElement } from "./elements/sceneElement";
 import { OutputElement } from "./elements/outputElement";
+import { SceneElement } from "./elements/nodes/sceneElement";
 import { Object3dElement } from "./elements/nodes/object3dElement";
 
 export const install = () => {
