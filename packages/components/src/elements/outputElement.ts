@@ -14,6 +14,7 @@ export class OutputElement extends BaseElement {
 
     if (canvas && context) {
       context.createRenderer(canvas);
+      console.log(context);
     }
   }
 
