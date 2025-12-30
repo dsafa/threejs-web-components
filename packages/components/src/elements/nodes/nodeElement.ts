@@ -1,12 +1,15 @@
-import { BaseElement } from "../baseElement";
 import { Object3D } from "three";
+import { BaseElement } from "../baseElement";
+import type { INodeElement } from "./INodeElement";
+import { getParentObject } from "./nodeUtils";
 
-export abstract class NodeElement<
-  TObjectType extends Object3D = Object3D
-> extends BaseElement {
+export abstract class NodeElement<TObjectType extends Object3D = Object3D>
+  extends BaseElement
+  implements INodeElement
+{
   public readonly isNodeElement = true;
 
-  protected object: TObjectType;
+  public object: TObjectType;
 
   constructor(object: TObjectType) {
     super();
@@ -17,24 +20,16 @@ export abstract class NodeElement<
   override connectedCallback() {
     super.connectedCallback();
 
-    const parent = this.getParentObject();
+    const parent = getParentObject(this);
 
     if (parent) {
       parent.object.add(this.object);
     }
   }
 
-  private getParentObject() {
-    const ancestor = this.getAncestor();
+  override disconnectedCallback() {
+    super.disconnectedCallback();
 
-    if (ancestor && isNodeElement(ancestor)) {
-      return ancestor;
-    }
-
-    return null;
+    this.object.removeFromParent();
   }
 }
-
-const isNodeElement = (element: HTMLElement): element is NodeElement => {
-  return (element as NodeElement).isNodeElement === true;
-};

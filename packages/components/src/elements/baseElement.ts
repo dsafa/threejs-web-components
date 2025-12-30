@@ -23,7 +23,7 @@ export class BaseElement extends HTMLElement implements IBaseElement {
     return this._accessor.getRootContext();
   }
 
-  protected getAncestor(): IBaseElement | null {
+  public getAncestor(): IBaseElement | null {
     return this._accessor.getAncestor();
   }
 }
