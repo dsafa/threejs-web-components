@@ -7,5 +7,10 @@ export class SceneElement extends BaseElement {
 
   connectedCallback() {
     super.connectedCallback();
+
+    const context = this.getRootContext();
+    if (context) {
+      context.createScene();
+    }
   }
 }
