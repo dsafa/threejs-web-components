@@ -14,6 +14,8 @@ import CameraControls from "camera-controls";
 import { BaseElement } from "./baseElement";
 import type { Context } from "../core/context";
 import type { NodeElement } from "./nodes/nodeElement";
+import { parseCommand } from "../core/command";
+import { degToRad } from "three/src/math/MathUtils.js";
 
 const subsetOfTHREE = {
   Vector2: Vector2,
@@ -70,6 +72,7 @@ export class CameraControlsElement extends BaseElement {
       { signal: abortSignal }
     );
 
+    this.attachCommands(context, abortSignal);
     this.attachControlEvents(context, abortSignal);
     this.attachCamera(context);
 
@@ -133,5 +136,41 @@ export class CameraControlsElement extends BaseElement {
       },
       { once: true }
     );
+  }
+
+  private attachCommands(context: Context, abortSignal: AbortSignal) {
+    const handleCommand = (event: CommandEvent) => {
+      const command = parseCommand(event.command);
+
+      switch (command.name) {
+        case "fit": {
+          if (context.scene) {
+            this._controls.fitToSphere(context.scene, true);
+          }
+
+          break;
+        }
+        case "rotate": {
+          if (command.args.azimuth) {
+            const value = Number.parseFloat(command.args.azimuth);
+            if (Number.isFinite(value)) {
+              this._controls.rotate(degToRad(value), 0, true);
+            }
+          }
+
+          if (command.args.polar) {
+            const value = Number.parseFloat(command.args.polar);
+            if (Number.isFinite(value)) {
+              this._controls.rotate(0, degToRad(value), true);
+            }
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    };
+
+    this.addEventListener("command", handleCommand, { signal: abortSignal });
   }
 }
