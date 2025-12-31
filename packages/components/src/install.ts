@@ -1,6 +1,6 @@
 import { RendererElement } from "./elements/rendererElement";
 import { OutputElement } from "./elements/outputElement";
-import { GeometryElement } from "./elements/geometryElement";
+import { GeometryElement } from "./elements/geometry/geometryElement";
 import { SceneElement } from "./elements/nodes/sceneElement";
 import { Object3dElement } from "./elements/nodes/object3dElement";
 import { MeshElement } from "./elements/nodes/meshElement";

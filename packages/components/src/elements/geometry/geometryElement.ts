@@ -1,5 +1,5 @@
-import { BaseElement } from "./baseElement";
-import { getParentObject } from "./nodes/nodeUtils";
+import { BaseElement } from "../baseElement";
+import { getParentObject } from "../nodes/nodeUtils";
 import { BoxGeometry, DoubleSide, MeshBasicMaterial, type Mesh } from "three";
 
 export class GeometryElement extends BaseElement {
