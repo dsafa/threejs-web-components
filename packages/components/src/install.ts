@@ -1,6 +1,8 @@
 import { RendererElement } from "./elements/rendererElement";
 import { OutputElement } from "./elements/outputElement";
 import { GeometryElement } from "./elements/geometry/geometryElement";
+import { BoxGeometryElement } from "./elements/geometry/boxGeometryElement";
+import { BasicMaterialElement } from "./elements/material/basicMaterialElement";
 import { SceneElement } from "./elements/nodes/sceneElement";
 import { Object3dElement } from "./elements/nodes/object3dElement";
 import { MeshElement } from "./elements/nodes/meshElement";
@@ -15,8 +17,10 @@ export const install = () => {
     ["twc-object3d", Object3dElement],
     ["twc-mesh", MeshElement],
     ["twc-geometry", GeometryElement],
+    ["twc-box-geometry", BoxGeometryElement],
     ["twc-perspective-camera", PerspectiveCameraElement],
     ["twc-camera-controls", CameraControlsElement],
+    ["twc-basic-material", BasicMaterialElement],
   ];
 
   for (const [name, element] of components) {

@@ -57,11 +57,8 @@ export class CameraControlsElement extends BaseElement {
       this._controls.connect(context.canvas);
     }
 
-    if (context.scene) {
-      this._controls.fitToBox(context.scene, true, {
-        paddingBottom: 1,
-        paddingTop: 1,
-      });
+    if (context.scene?.children.length) {
+      this._controls.fitToSphere(new Sphere(undefined, 20), true);
       this._controls.rotatePolarTo(1);
     }
 
