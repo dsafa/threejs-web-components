@@ -10,7 +10,20 @@
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
     <div>
-      <twc-renderer></twc-renderer>
+      <twc-renderer>
+        <twc-scene>
+          <twc-mesh>
+            <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+            <twc-basic-material></twc-basic-material>
+          </twc-mesh>
+          <twc-camera-controls>
+            <twc-perspective-camera></twc-perspective-camera>
+          </twc-camera-controls>
+        </twc-scene>
+        <twc-output>
+          <canvas width="500px" height="300px"></canvas>
+        </twc-output>
+      </twc-renderer>
     </div>
   </body>
 </html>
