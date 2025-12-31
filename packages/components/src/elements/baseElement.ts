@@ -7,16 +7,25 @@ export class BaseElement extends HTMLElement implements IBaseElement {
 
   private _accessor: Accessor;
 
+  private _abortController = new AbortController();
+
   constructor() {
     super();
 
     this._accessor = new Accessor(this);
   }
 
-  connectedCallback() {}
+  protected get connectedSignal() {
+    return this._abortController.signal;
+  }
+
+  connectedCallback() {
+    this._abortController = new AbortController();
+  }
 
   disconnectedCallback() {
     this._accessor.clear();
+    this._abortController.abort();
   }
 
   public getRootContext(): Context | null {

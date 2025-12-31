@@ -407,6 +407,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"camera-controls@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "camera-controls@npm:3.1.2"
+  peerDependencies:
+    three: ">=0.126.1"
+  checksum: 10c0/2d42162efd6789e713332a72212819fb04b261f7babc45b5794cd902997e4a4826c9401b672ffab2e09f9808fc2b615d9154d67c57f38a7c90487d4cf5429655
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^3.0.0":
   version: 3.0.0
   resolution: "chownr@npm:3.0.0"
@@ -426,6 +435,7 @@ __metadata:
   resolution: "components@workspace:packages/components"
   dependencies:
     "@types/three": "npm:^0"
+    camera-controls: "npm:^3.1.2"
     three: "npm:^0.182.0"
     typescript: "npm:~5.9.3"
     unplugin-dts: "npm:^1.0.0-beta.6"

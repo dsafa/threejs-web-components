@@ -12,10 +12,15 @@
     <div>
       <twc-renderer>
         <twc-scene>
-          <twc-object3d></twc-object3d>
+          <twc-mesh>
+            <twc-geometry></twc-geometry>
+          </twc-mesh>
+          <twc-camera-controls>
+            <twc-perspective-camera></twc-perspective-camera>
+          </twc-camera-controls>
         </twc-scene>
         <twc-output>
-          <canvas></canvas>
+          <canvas width="500px" height="300px"></canvas>
         </twc-output>
       </twc-renderer>
     </div>
