@@ -25,6 +25,8 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
     if (parent) {
       parent.object.add(this.object);
     }
+
+    this.setAttribute("type", this.object.type);
   }
 
   override disconnectedCallback() {

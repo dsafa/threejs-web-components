@@ -13,6 +13,7 @@ import {
 import CameraControls from "camera-controls";
 import { BaseElement } from "./baseElement";
 import type { Context } from "../core/context";
+import type { NodeElement } from "./nodes/nodeElement";
 
 const subsetOfTHREE = {
   Vector2: Vector2,
@@ -49,10 +50,6 @@ export class CameraControlsElement extends BaseElement {
   }
 
   private setup(context: Context, abortSignal: AbortSignal) {
-    if (context.activeCamera) {
-      this._controls.camera = context.activeCamera as PerspectiveCamera;
-    }
-
     if (context.canvas) {
       this._controls.connect(context.canvas);
     }
@@ -73,6 +70,40 @@ export class CameraControlsElement extends BaseElement {
       { signal: abortSignal }
     );
 
+    this.attachControlEvents(context, abortSignal);
+    this.attachCamera(context);
+
+    const observer = new MutationObserver(() => {
+      this.attachCamera(context);
+    });
+
+    observer.observe(this, { childList: true });
+
+    abortSignal.addEventListener(
+      "abort",
+      () => {
+        observer.disconnect();
+      },
+      { once: true }
+    );
+  }
+
+  private attachCamera(context: Context) {
+    const activeCameraId = this.getAttribute("for");
+
+    const cameraElement = activeCameraId
+      ? this.ownerDocument.querySelector<NodeElement<PerspectiveCamera>>(
+          activeCameraId
+        )
+      : this.querySelector<NodeElement<PerspectiveCamera>>("[type$=Camera]");
+
+    if (cameraElement) {
+      this._controls.camera = cameraElement.object;
+      context.setActiveCamera(cameraElement.object);
+    }
+  }
+
+  private attachControlEvents(context: Context, abortSignal: AbortSignal) {
     const render = () => {
       context.queueRender();
     };
@@ -86,5 +117,21 @@ export class CameraControlsElement extends BaseElement {
     this._controls.addEventListener("rest", render);
     this._controls.addEventListener("sleep", render);
     this._controls.addEventListener("rest", render);
+
+    abortSignal.addEventListener(
+      "abort",
+      () => {
+        this._controls.removeEventListener("update", render);
+        this._controls.removeEventListener("wake", render);
+        this._controls.removeEventListener("controlstart", render);
+        this._controls.removeEventListener("control", render);
+        this._controls.removeEventListener("transitionstart", render);
+        this._controls.removeEventListener("controlend", render);
+        this._controls.removeEventListener("rest", render);
+        this._controls.removeEventListener("sleep", render);
+        this._controls.removeEventListener("rest", render);
+      },
+      { once: true }
+    );
   }
 }

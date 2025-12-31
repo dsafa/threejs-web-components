@@ -15,8 +15,6 @@ export class PerspectiveCameraElement extends NodeElement<PerspectiveCamera> {
       return;
     }
 
-    context.setActiveCamera(this.object);
-
     context.addEventListener(
       "size-changed",
       ({ height, width }) => {
