@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Styling example</title>
+    <style>
+      @keyframes colors {
+        0% {
+          color: white;
+        }
+
+        100% {
+          color: gray;
+        }
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        }
+
+        33% {
+          transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
+        }
+
+        33.0001% {
+          transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        }
+
+        66% {
+          transform: rotateX(360deg) rotateY(0deg) rotateZ(0deg);
+        }
+
+        66.0001% {
+          transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        }
+
+        99.999% {
+          transform: rotateX(0deg) rotateY(360deg) rotateZ(0deg);
+        }
+
+        100% {
+          transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        }
+      }
+
+      twc-mesh {
+        color: white;
+
+        animation-name: rotation;
+        animation-iteration-count: infinite;
+        animation-duration: 5s;
+      }
+
+      twc-basic-material {
+        animation-name: colors;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-duration: 3s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <div>
+      <twc-renderer>
+        <twc-scene>
+          <twc-mesh>
+            <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+            <twc-basic-material></twc-basic-material>
+          </twc-mesh>
+          <twc-camera-controls>
+            <twc-perspective-camera></twc-perspective-camera>
+          </twc-camera-controls>
+        </twc-scene>
+        <twc-output>
+          <canvas width="500px" height="300px"></canvas>
+        </twc-output>
+      </twc-renderer>
+    </div>
+  </body>
+</html>

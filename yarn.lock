@@ -436,6 +436,7 @@ __metadata:
   dependencies:
     "@types/three": "npm:^0"
     camera-controls: "npm:^3.1.2"
+    style-observer: "npm:^0.1.2"
     three: "npm:^0.182.0"
     typescript: "npm:~5.9.3"
     unplugin-dts: "npm:^1.0.0-beta.6"
@@ -1204,6 +1205,13 @@ __metadata:
   dependencies:
     minipass: "npm:^7.0.3"
   checksum: 10c0/405f3a531cd98b013cecb355d63555dca42fd12c7bc6671738aaa9a82882ff41cdf0ef9a2b734ca4f9a760338f114c29d01d9238a65db3ccac27929bd6e6d4b2
+  languageName: node
+  linkType: hard
+
+"style-observer@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "style-observer@npm:0.1.2"
+  checksum: 10c0/855b56982b083f390472c3761ad77ef05f4ca246133421da3db9ff88e90bd86c2e9b34650c36dc20582340eb54f877e5dde165162c86a05d75ff2e0840afe99b
   languageName: node
   linkType: hard
 

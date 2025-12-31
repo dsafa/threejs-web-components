@@ -53,7 +53,10 @@ export class Context extends Dispatcher<EventMap> {
       throw new Error("Renderer already exists");
     }
 
-    this._renderer = new WebGLRenderer({ canvas: canvasElement });
+    this._renderer = new WebGLRenderer({
+      canvas: canvasElement,
+      antialias: true,
+    });
     return this._renderer;
   }
 
