@@ -14,10 +14,13 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
 
   public object: TObjectType;
 
+  protected internals;
+
   constructor(object: TObjectType) {
     super();
 
     this.object = object;
+    this.internals = this.attachInternals();
   }
 
   override connectedCallback() {
@@ -37,6 +40,22 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
       onUpdate: this.onStyleChange.bind(this),
       signal: this.connectedSignal,
     });
+
+    const context = this.getRootContext();
+    if (context) {
+      context.addEventListener(
+        "hover-changed",
+        ({ objectId }) => {
+          const isHovered = objectId === this.object.id;
+          if (isHovered) {
+            this.internals.states.add("hovered");
+          } else {
+            this.internals.states.delete("hovered");
+          }
+        },
+        { signal: this.connectedSignal }
+      );
+    }
   }
 
   override disconnectedCallback() {

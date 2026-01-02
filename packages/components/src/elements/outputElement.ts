@@ -1,5 +1,6 @@
 import { BaseElement } from "./baseElement";
 import type { Context } from "../core/context";
+import { Raycaster, Vector2 } from "three";
 
 export class OutputElement extends BaseElement {
   constructor() {
@@ -33,5 +34,43 @@ export class OutputElement extends BaseElement {
     });
 
     observer.observe(canvas);
+
+    const raycaster = new Raycaster();
+    const mouseVec = new Vector2();
+
+    let lastHoveredObjectId: number | undefined = undefined;
+    canvas.addEventListener(
+      "pointermove",
+      ({ offsetX, offsetY }) => {
+        if (!context.activeCamera || !context.scene) {
+          return;
+        }
+
+        const { width, height } = canvas.getBoundingClientRect();
+        mouseVec.x = (offsetX / width) * 2 - 1;
+        mouseVec.y = -(offsetY / height) * 2 + 1;
+
+        raycaster.setFromCamera(mouseVec, context.activeCamera);
+
+        const [intersect] = raycaster.intersectObject(context.scene, true);
+        const objectId = intersect?.object.id;
+
+        if (lastHoveredObjectId === objectId) {
+          return;
+        }
+
+        lastHoveredObjectId = objectId;
+
+        context.dispatchEvent({
+          type: "hover-changed",
+          objectId: objectId ?? null,
+        });
+
+        context.queueRender();
+      },
+      {
+        signal: this.connectedSignal,
+      }
+    );
   }
 }
