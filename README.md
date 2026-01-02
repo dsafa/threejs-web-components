@@ -6,6 +6,8 @@ experimenting with webcomponents and threejs
 
 ## Scene
 
+### Instancing
+
 ### GLB
 
 ## Styling
@@ -14,8 +16,21 @@ experimenting with webcomponents and threejs
 
 ### Animations
 
-### Renderer States
-
-### Local States
-
 ## Commands
+
+## Interactivity
+
+### Custom element states
+
+Supports some basic interactivity with the objects in the scene. Combined with css styling, we can style meshes based on some states.
+
+Supported states:
+
+- hover: `:state(hovered)`
+- selected: `:state(selected)`
+
+## Object click commands
+
+Objects support the `commandfor` and `command` attributes like html button elements and will be invoked when clicked
+
+## Rendering html element overlays

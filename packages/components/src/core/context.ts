@@ -11,6 +11,15 @@ interface EventMap {
     width: number;
     height: number;
   };
+  "hover-changed": {
+    objectId: number | null;
+  };
+  "object-selected-changed": {
+    objectId: number | null;
+  };
+  "on-object-click": {
+    objectId: number;
+  };
 }
 
 export class Context extends Dispatcher<EventMap> {
@@ -26,6 +35,12 @@ export class Context extends Dispatcher<EventMap> {
 
   private _tempVec2 = new Vector2();
 
+  private _willRender = 0;
+
+  private _hoveredObjectId: number | null = null;
+
+  private _selectedObjectId: number | null = null;
+
   constructor() {
     super();
   }
@@ -40,6 +55,30 @@ export class Context extends Dispatcher<EventMap> {
 
   public get canvas() {
     return this._renderer?.domElement;
+  }
+
+  public get hoveredObjectId() {
+    return this._hoveredObjectId;
+  }
+
+  public set hoveredObjectId(value: number | null) {
+    if (this._hoveredObjectId === value) {
+      return;
+    }
+
+    this.dispatchEvent({ type: "hover-changed", objectId: value });
+  }
+
+  public get selectedObjectId() {
+    return this._selectedObjectId;
+  }
+
+  public set selectedObjectId(value: number | null) {
+    if (this._selectedObjectId === value) {
+      return;
+    }
+
+    this.dispatchEvent({ type: "object-selected-changed", objectId: value });
   }
 
   public size() {
@@ -80,9 +119,10 @@ export class Context extends Dispatcher<EventMap> {
     this.dispatchEvent({ type: "active-camera-changed" });
   }
 
-  public queueRender() {
+  public queueRender(force = true) {
     if (this._animationFrame == null) {
       this._clock.start();
+      this._willRender = force ? 10 : 0;
       this._animationFrame = window.requestAnimationFrame(
         this.onAnimationFrame.bind(this)
       );
@@ -96,7 +136,7 @@ export class Context extends Dispatcher<EventMap> {
 
     const delta = this._clock.getDelta();
 
-    let didUpdate = false;
+    let didUpdate = this._willRender > 0;
     const renderStartInfo = {
       type: "render-start",
       delta,
@@ -108,11 +148,12 @@ export class Context extends Dispatcher<EventMap> {
     this.dispatchEvent(renderStartInfo);
 
     this._animationFrame = null;
+    this._willRender--;
 
     if (didUpdate) {
       this._renderer.render(this._scene, this._activeCamera);
 
-      this.queueRender();
+      this.queueRender(this._willRender > 0);
     } else {
       this._clock.stop();
     }

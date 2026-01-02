@@ -7,8 +7,6 @@ export interface INodeElement<TObjectType extends Object3D = Object3D>
   readonly object: TObjectType;
 }
 
-export const isNodeElement = (
-  element: HTMLElement
-): element is INodeElement => {
+export const isNodeElement = (element: Element): element is INodeElement => {
   return (element as INodeElement).isNodeElement === true;
 };

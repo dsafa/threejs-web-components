@@ -16,6 +16,7 @@ import type { Context } from "../core/context";
 import type { NodeElement } from "./nodes/nodeElement";
 import { parseCommand } from "../core/command";
 import { degToRad } from "three/src/math/MathUtils.js";
+import { isNodeElement } from "./nodes/INodeElement";
 
 const subsetOfTHREE = {
   Vector2: Vector2,
@@ -144,7 +145,13 @@ export class CameraControlsElement extends BaseElement {
 
       switch (command.name) {
         case "fit": {
-          if (context.scene) {
+          if (
+            event.source &&
+            event.source instanceof Element &&
+            isNodeElement(event.source)
+          ) {
+            this._controls.fitToSphere(event.source.object, true);
+          } else if (context.scene) {
             this._controls.fitToSphere(context.scene, true);
           }
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>examples</title>
+    <style>
+      twc-mesh {
+        color: white;
+      }
+
+      #one:state(hovered) {
+        color: red;
+      }
+
+      #two {
+        transform: translate3d(10px, 0px, 0px);
+      }
+
+      #two:state(hovered) {
+        animation-name: rotate;
+        animation-duration: 1s;
+      }
+
+      #three {
+        transform: translate3d(20px, 0px, 0px);
+      }
+
+      #three:state(selected) {
+        color: blue;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: translate3d(10px, 0px, 0px) rotateZ(0deg);
+        }
+
+        100% {
+          transform: translate3d(10px, 0px, 0px) rotateZ(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <div>
+      <twc-renderer>
+        <twc-scene>
+          <twc-mesh id="one" commandfor="controls" command="--fit">
+            <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+            <twc-basic-material></twc-basic-material>
+          </twc-mesh>
+          <twc-mesh id="two" commandfor="controls" command="--fit">
+            <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+            <twc-basic-material></twc-basic-material>
+          </twc-mesh>
+          <twc-mesh id="three">
+            <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+            <twc-basic-material></twc-basic-material>
+          </twc-mesh>
+          <twc-camera-controls id="controls">
+            <twc-perspective-camera></twc-perspective-camera>
+          </twc-camera-controls>
+        </twc-scene>
+        <twc-output>
+          <canvas width="500px" height="300px"></canvas>
+        </twc-output>
+      </twc-renderer>
+      <ul>
+        <li>Click some object to fit</li>
+        <li>Click some object to change selected style</li>
+        <li>Hover objects to change style</li>
+      </ul>
+    </div>
+  </body>
+</html>
