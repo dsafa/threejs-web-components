@@ -23,6 +23,14 @@
         animation-duration: 1s;
       }
 
+      #three {
+        transform: translate3d(20px, 0px, 0px);
+      }
+
+      #three:state(selected) {
+        color: blue;
+      }
+
       @keyframes rotate {
         0% {
           transform: translate3d(10px, 0px, 0px) rotateZ(0deg);
@@ -40,15 +48,19 @@
     <div>
       <twc-renderer>
         <twc-scene>
-          <twc-mesh id="one">
+          <twc-mesh id="one" commandfor="controls" command="--fit">
             <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
             <twc-basic-material></twc-basic-material>
           </twc-mesh>
-          <twc-mesh id="two">
+          <twc-mesh id="two" commandfor="controls" command="--fit">
             <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
             <twc-basic-material></twc-basic-material>
           </twc-mesh>
-          <twc-camera-controls>
+          <twc-mesh id="three">
+            <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+            <twc-basic-material></twc-basic-material>
+          </twc-mesh>
+          <twc-camera-controls id="controls">
             <twc-perspective-camera></twc-perspective-camera>
           </twc-camera-controls>
         </twc-scene>
@@ -56,6 +68,10 @@
           <canvas width="500px" height="300px"></canvas>
         </twc-output>
       </twc-renderer>
+      <ul>
+        <li>Click object to fit</li>
+        <li>Hover object to change style</li>
+      </ul>
     </div>
   </body>
 </html>

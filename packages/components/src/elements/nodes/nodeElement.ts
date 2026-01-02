@@ -55,6 +55,38 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
         },
         { signal: this.connectedSignal }
       );
+
+      context.addEventListener(
+        "object-selected-changed",
+        ({ objectId }) => {
+          const selected = objectId === this.object.id;
+          if (selected) {
+            this.internals.states.add("selected");
+          } else {
+            this.internals.states.delete("selected");
+          }
+        },
+        { signal: this.connectedSignal }
+      );
+
+      context.addEventListener(
+        "on-object-click",
+        ({ objectId }) => {
+          const isThisObject = objectId === this.object.id;
+          const command = this.getAttribute("command");
+          const commandFor = this.getAttribute("commandfor");
+          const commandForTarget = commandFor
+            ? this.ownerDocument.getElementById(commandFor)
+            : null;
+
+          if (isThisObject && command && commandForTarget) {
+            commandForTarget.dispatchEvent(
+              new CommandEvent("command", { command, source: this })
+            );
+          }
+        },
+        { signal: this.connectedSignal }
+      );
     }
   }
 

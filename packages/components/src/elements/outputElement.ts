@@ -38,35 +38,44 @@ export class OutputElement extends BaseElement {
     const raycaster = new Raycaster();
     const mouseVec = new Vector2();
 
-    let lastHoveredObjectId: number | undefined = undefined;
+    const handleRaycast = (event: MouseEvent) => {
+      if (!context.activeCamera || !context.scene) {
+        return null;
+      }
+
+      const { width, height } = canvas.getBoundingClientRect();
+      mouseVec.x = (event.offsetX / width) * 2 - 1;
+      mouseVec.y = -(event.offsetY / height) * 2 + 1;
+
+      raycaster.setFromCamera(mouseVec, context.activeCamera);
+
+      const [intersect] = raycaster.intersectObject(context.scene, true);
+      const objectId = intersect?.object.id;
+
+      return objectId;
+    };
+
     canvas.addEventListener(
       "pointermove",
-      ({ offsetX, offsetY }) => {
-        if (!context.activeCamera || !context.scene) {
-          return;
+      (event) => {
+        const objectId = handleRaycast(event);
+
+        context.hoveredObjectId = objectId;
+      },
+      {
+        signal: this.connectedSignal,
+      }
+    );
+
+    canvas.addEventListener(
+      "click",
+      (event) => {
+        const objectId = handleRaycast(event);
+        context.selectedObjectId = objectId;
+
+        if (objectId) {
+          context.dispatchEvent({ type: "on-object-click", objectId });
         }
-
-        const { width, height } = canvas.getBoundingClientRect();
-        mouseVec.x = (offsetX / width) * 2 - 1;
-        mouseVec.y = -(offsetY / height) * 2 + 1;
-
-        raycaster.setFromCamera(mouseVec, context.activeCamera);
-
-        const [intersect] = raycaster.intersectObject(context.scene, true);
-        const objectId = intersect?.object.id;
-
-        if (lastHoveredObjectId === objectId) {
-          return;
-        }
-
-        lastHoveredObjectId = objectId;
-
-        context.dispatchEvent({
-          type: "hover-changed",
-          objectId: objectId ?? null,
-        });
-
-        context.queueRender();
       },
       {
         signal: this.connectedSignal,

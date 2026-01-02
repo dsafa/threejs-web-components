@@ -14,6 +14,12 @@ interface EventMap {
   "hover-changed": {
     objectId: number | null;
   };
+  "object-selected-changed": {
+    objectId: number | null;
+  };
+  "on-object-click": {
+    objectId: number;
+  };
 }
 
 export class Context extends Dispatcher<EventMap> {
@@ -31,6 +37,10 @@ export class Context extends Dispatcher<EventMap> {
 
   private _willRender = 0;
 
+  private _hoveredObjectId: number | null = null;
+
+  private _selectedObjectId: number | null = null;
+
   constructor() {
     super();
   }
@@ -45,6 +55,30 @@ export class Context extends Dispatcher<EventMap> {
 
   public get canvas() {
     return this._renderer?.domElement;
+  }
+
+  public get hoveredObjectId() {
+    return this._hoveredObjectId;
+  }
+
+  public set hoveredObjectId(value: number | null) {
+    if (this._hoveredObjectId === value) {
+      return;
+    }
+
+    this.dispatchEvent({ type: "hover-changed", objectId: value });
+  }
+
+  public get selectedObjectId() {
+    return this._selectedObjectId;
+  }
+
+  public set selectedObjectId(value: number | null) {
+    if (this._selectedObjectId === value) {
+      return;
+    }
+
+    this.dispatchEvent({ type: "object-selected-changed", objectId: value });
   }
 
   public size() {
