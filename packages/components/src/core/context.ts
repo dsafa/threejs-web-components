@@ -1,4 +1,5 @@
 import { Camera, Clock, Scene, Vector2, WebGLRenderer } from "three";
+import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { Dispatcher } from "./dispatcher";
 
 interface EventMap {
@@ -40,6 +41,8 @@ export class Context extends Dispatcher<EventMap> {
   private _hoveredObjectId: number | null = null;
 
   private _selectedObjectId: number | null = null;
+
+  private _cssRenderer?: CSS2DRenderer;
 
   constructor() {
     super();
@@ -87,7 +90,10 @@ export class Context extends Dispatcher<EventMap> {
     return { width: this._tempVec2.x, height: this._tempVec2.height };
   }
 
-  public createRenderer(canvasElement: HTMLCanvasElement) {
+  public createRenderer(
+    canvasElement: HTMLCanvasElement,
+    containerElement: HTMLElement
+  ) {
     if (this._renderer) {
       throw new Error("Renderer already exists");
     }
@@ -96,6 +102,9 @@ export class Context extends Dispatcher<EventMap> {
       canvas: canvasElement,
       antialias: true,
     });
+
+    this._cssRenderer = new CSS2DRenderer({ element: containerElement });
+
     return this._renderer;
   }
 
@@ -110,6 +119,7 @@ export class Context extends Dispatcher<EventMap> {
 
   public updateSize(width: number, height: number) {
     this._renderer?.setSize(width, height);
+    this._cssRenderer?.setSize(width, height);
     this.dispatchEvent({ type: "size-changed", width, height });
   }
 
@@ -152,6 +162,7 @@ export class Context extends Dispatcher<EventMap> {
 
     if (didUpdate) {
       this._renderer.render(this._scene, this._activeCamera);
+      this._cssRenderer?.render(this._scene, this._activeCamera);
 
       this.queueRender(this._willRender > 0);
     } else {
