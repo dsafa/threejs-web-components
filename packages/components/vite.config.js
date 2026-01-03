@@ -14,9 +14,9 @@ export default defineConfig({
       formats: ["es"],
     },
     rolldownOptions: {
-      external: [""],
+      external: ["three", /three\//, "camera-controls"],
       output: {
-        globals: {},
+        globals: { THREE: "three" },
       },
     },
   },

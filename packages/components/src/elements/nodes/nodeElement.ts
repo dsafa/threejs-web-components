@@ -2,7 +2,6 @@ import { Matrix4, Object3D } from "three";
 import { BaseElement } from "../baseElement";
 import type { INodeElement } from "./INodeElement";
 import { getParentObject } from "./nodeUtils";
-import { createStyleObserver } from "../styleObserver";
 
 const styleProperties = ["transform"];
 
@@ -33,6 +32,9 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
     }
 
     this.setAttribute("type", this.object.type);
+    if (this.object.name) {
+      this.setAttribute("name", this.object.name);
+    }
 
     const context = this.getRootContext();
     if (context) {
