@@ -6,6 +6,7 @@ import type { MeshElement } from "./meshElement";
 import type { GeometryElement } from "../geometry/geometryElement";
 import type { BasicMaterialElement } from "../material/basicMaterialElement";
 import type { IBaseElement } from "../IBaseElement";
+import type { INodeElement } from "./INodeElement";
 
 export class GLBElement extends NodeElement<Group> {
   static observedAttributes = ["src"];
@@ -28,8 +29,6 @@ export class GLBElement extends NodeElement<Group> {
     }
 
     this._loader.manager = context.loadingManager;
-
-    this._shadowRoot.innerHTML = "";
   }
 
   attributeChangedCallback() {
@@ -54,9 +53,12 @@ export class GLBElement extends NodeElement<Group> {
       const node = sceneToElementNodes(object.scene);
       node.element.attach(context, this);
 
-      buildDOM(node);
+      const partList = node.element.getAttribute("part")?.split(" ") ?? [];
+      partList.push("root");
+      node.element.setAttribute("part", partList.join(" "));
 
       this._shadowRoot.appendChild(node.element);
+      buildDOM(node);
     });
   }
 }
@@ -74,13 +76,13 @@ interface SceneElementNode {
 }
 
 const sceneToElementNodes = (object: Object3D): SceneElementNode => {
-  let element: IBaseElement;
+  let element: INodeElement;
   let children: SceneElementNode[] = [];
 
   switch (object.type) {
     case "Group":
     case "Object3D": {
-      element = document.createElement("twc-object3d") as IBaseElement;
+      element = document.createElement("twc-object3d") as INodeElement;
       break;
     }
     case "Mesh": {
@@ -90,6 +92,11 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
     default:
       throw new Error("Unhandled type " + object.type);
   }
+
+  const parts = [`Type-${element.object.type}`, element.object.name].filter(
+    Boolean
+  );
+  element.setAttribute("part", parts.join(" "));
 
   for (const childObject of object.children) {
     children.push(sceneToElementNodes(childObject));
@@ -101,7 +108,7 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
   };
 };
 
-const meshToElements = (mesh: Mesh): SceneElementNode => {
+const meshToElements = (mesh: Mesh) => {
   const meshElement = document.createElement("twc-mesh") as MeshElement;
   meshElement.object.copy(mesh);
 
