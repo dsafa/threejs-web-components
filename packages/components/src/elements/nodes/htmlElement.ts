@@ -17,14 +17,14 @@ export class HtmlNodeElement extends NodeElement<CSS2DObject> {
 
     this._shadowRoot.innerHTML = template;
     const containerElement = this._shadowRoot.getElementById("container")!;
+    const elementProxy = this.object.element;
 
     const context = this.getRootContext();
     if (context) {
       context.addEventListener(
         "render-end",
         () => {
-          const element = this.object.element;
-          const computedStyles = window.getComputedStyle(element);
+          const computedStyles = window.getComputedStyle(elementProxy);
 
           containerElement.style.setProperty(
             "transform",

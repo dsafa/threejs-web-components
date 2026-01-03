@@ -34,3 +34,5 @@ Supported states:
 Objects support the `commandfor` and `command` attributes like html button elements and will be invoked when clicked
 
 ## Rendering html element overlays
+
+Render html elements in the scene with `twc-html` component. This uses the [threejs css2d renderer](https://threejs.org/docs/#CSS2DRenderer)
