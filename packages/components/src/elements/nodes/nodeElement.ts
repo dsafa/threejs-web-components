@@ -34,13 +34,6 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
 
     this.setAttribute("type", this.object.type);
 
-    createStyleObserver({
-      element: this,
-      properties: styleProperties,
-      onUpdate: this.onStyleChange.bind(this),
-      signal: this.connectedSignal,
-    });
-
     const context = this.getRootContext();
     if (context) {
       context.addEventListener(
@@ -96,7 +89,7 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
     this.object.removeFromParent();
   }
 
-  protected onStyleChange(property: string, value: string) {
+  override onStyleChange(property: string, value: string) {
     switch (property) {
       case "transform": {
         parseTransform(value, this.object.matrix);
@@ -110,6 +103,10 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
       default:
         break;
     }
+  }
+
+  override getObservedStyles(): string[] {
+    return styleProperties;
   }
 }
 

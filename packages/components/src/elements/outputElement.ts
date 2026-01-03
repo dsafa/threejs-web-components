@@ -1,24 +1,10 @@
+import { Raycaster, Vector2 } from "three";
 import { BaseElement } from "./baseElement";
 import type { Context } from "../core/context";
-import { Raycaster, Vector2 } from "three";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
-
-const template = `
-<style>
-  #root { display: grid; place-content: center; position: relative; width: fit-content; }
-  #overlay { position: absolute; width: 100%; height: 100%; pointer-events: none; }
-  #overlay > * { pointer-events: all; }
-</style>
-<div id='root'><slot></slot><div id='overlay'/></div>
-`;
 
 export class OutputElement extends BaseElement {
-  private _shadowRoot;
-
   constructor() {
     super();
-
-    this._shadowRoot = this.attachShadow({ mode: "open" });
   }
 
   connectedCallback() {
@@ -28,13 +14,8 @@ export class OutputElement extends BaseElement {
 
     const context = this.getRootContext();
 
-    this._shadowRoot.innerHTML = template;
-
     if (canvas && context) {
-      context.createRenderer(
-        canvas,
-        this._shadowRoot.getElementById("overlay")!
-      );
+      context.createRenderer(canvas);
       this.setup(context, canvas);
       console.log(context);
     }

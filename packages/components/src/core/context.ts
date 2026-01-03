@@ -8,6 +8,7 @@ interface EventMap {
     delta: number;
     markUpdated: () => void;
   };
+  "render-end": {};
   "size-changed": {
     width: number;
     height: number;
@@ -90,10 +91,7 @@ export class Context extends Dispatcher<EventMap> {
     return { width: this._tempVec2.x, height: this._tempVec2.height };
   }
 
-  public createRenderer(
-    canvasElement: HTMLCanvasElement,
-    containerElement: HTMLElement
-  ) {
+  public createRenderer(canvasElement: HTMLCanvasElement) {
     if (this._renderer) {
       throw new Error("Renderer already exists");
     }
@@ -103,9 +101,11 @@ export class Context extends Dispatcher<EventMap> {
       antialias: true,
     });
 
-    this._cssRenderer = new CSS2DRenderer({ element: containerElement });
-
     return this._renderer;
+  }
+
+  public createCssRenderer(containerElement: HTMLElement) {
+    this._cssRenderer = new CSS2DRenderer({ element: containerElement });
   }
 
   public createScene(scene: Scene) {
@@ -168,5 +168,7 @@ export class Context extends Dispatcher<EventMap> {
     } else {
       this._clock.stop();
     }
+
+    this.dispatchEvent({ type: "render-end" });
   }
 }
