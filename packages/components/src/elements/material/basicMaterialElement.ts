@@ -9,6 +9,10 @@ export class BasicMaterialElement extends MaterialElement {
     color: "white",
   });
 
+  public get material() {
+    return this._material;
+  }
+
   override connectedCallback() {
     super.connectedCallback();
 

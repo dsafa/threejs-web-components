@@ -44,6 +44,10 @@ export class BaseElement extends HTMLElement implements IBaseElement {
     return this._accessor.getAncestor();
   }
 
+  public attach(context: Context, ancestor: IBaseElement) {
+    this._accessor.attach(context, ancestor);
+  }
+
   protected onStyleChange(property: string, value: string) {}
 
   protected getObservedStyles(): string[] {

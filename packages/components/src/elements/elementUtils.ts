@@ -18,6 +18,11 @@ export class Accessor {
     this._ancestor = undefined;
   }
 
+  public attach(context: Context, ancestor: IBaseElement) {
+    this._context = context;
+    this._ancestor = ancestor;
+  }
+
   public getRootContext(): Context | null {
     if (this._context !== undefined) {
       return this._context;

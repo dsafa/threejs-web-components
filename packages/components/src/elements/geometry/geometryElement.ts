@@ -1,6 +1,6 @@
 import { BaseElement } from "../baseElement";
 import { getParentObject } from "../nodes/nodeUtils";
-import { type Mesh } from "three";
+import { BufferGeometry, type Mesh } from "three";
 
 export class GeometryElement extends BaseElement {
   protected target: Mesh | null = null;
@@ -17,5 +17,13 @@ export class GeometryElement extends BaseElement {
 
   override disconnectedCallback() {
     this.target = null;
+  }
+
+  public setGeometry(geometry: BufferGeometry) {
+    if (this.target && this.target.geometry !== geometry) {
+      this.target.geometry = geometry;
+    }
+
+    this.getRootContext()?.queueRender();
   }
 }

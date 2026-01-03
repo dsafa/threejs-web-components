@@ -8,6 +8,7 @@ import { Object3dElement } from "./elements/nodes/object3dElement";
 import { MeshElement } from "./elements/nodes/meshElement";
 import { HtmlNodeElement } from "./elements/nodes/htmlElement";
 import { PerspectiveCameraElement } from "./elements/nodes/perspectiveCameraElement";
+import { GLBElement } from "./elements/nodes/glbElement";
 import { CameraControlsElement } from "./elements/cameraControlsElement";
 
 export const install = () => {
@@ -22,6 +23,7 @@ export const install = () => {
     ["twc-box-geometry", BoxGeometryElement],
     ["twc-perspective-camera", PerspectiveCameraElement],
     ["twc-camera-controls", CameraControlsElement],
+    ["twc-glb", GLBElement],
     ["twc-basic-material", BasicMaterialElement],
   ];
 

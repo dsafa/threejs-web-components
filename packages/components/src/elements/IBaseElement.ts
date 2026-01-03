@@ -6,6 +6,8 @@ export interface IBaseElement extends HTMLElement {
   getRootContext: () => Context | null;
 
   getAncestor: () => IBaseElement | null;
+
+  attach: (context: Context, ancestor: IBaseElement) => void;
 }
 
 export const isBaseElement = (

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLB</title>
+  </head>
+  <body>
+    <script type="module" src="/src/main.ts"></script>
+    <div>
+      <twc-renderer>
+        <twc-scene>
+          <twc-glb src="/BoxTextured.glb"></twc-glb>
+          <twc-camera-controls id="controls">
+            <twc-perspective-camera></twc-perspective-camera>
+          </twc-camera-controls>
+        </twc-scene>
+        <twc-output>
+          <canvas width="500px" height="300px"></canvas>
+        </twc-output>
+      </twc-renderer>
+    </div>
+    <button type="button" commandfor="controls" command="--fit">Fit</button>
+  </body>
+</html>
