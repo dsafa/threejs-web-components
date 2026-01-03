@@ -1,6 +1,7 @@
 import type { Context } from "../core/context";
 import { Accessor } from "./elementUtils";
 import type { IBaseElement } from "./IBaseElement";
+import { createStyleObserver } from "./styleObserver";
 
 export class BaseElement extends HTMLElement implements IBaseElement {
   public readonly isBaseElement = true;
@@ -21,6 +22,13 @@ export class BaseElement extends HTMLElement implements IBaseElement {
 
   connectedCallback() {
     this._abortController = new AbortController();
+
+    createStyleObserver({
+      element: this,
+      properties: this.getObservedStyles(),
+      onUpdate: this.onStyleChange.bind(this),
+      signal: this.connectedSignal,
+    });
   }
 
   disconnectedCallback() {
@@ -34,5 +42,11 @@ export class BaseElement extends HTMLElement implements IBaseElement {
 
   public getAncestor(): IBaseElement | null {
     return this._accessor.getAncestor();
+  }
+
+  protected onStyleChange(property: string, value: string) {}
+
+  protected getObservedStyles(): string[] {
+    return [];
   }
 }

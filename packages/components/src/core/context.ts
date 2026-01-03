@@ -1,4 +1,5 @@
 import { Camera, Clock, Scene, Vector2, WebGLRenderer } from "three";
+import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { Dispatcher } from "./dispatcher";
 
 interface EventMap {
@@ -7,6 +8,7 @@ interface EventMap {
     delta: number;
     markUpdated: () => void;
   };
+  "render-end": {};
   "size-changed": {
     width: number;
     height: number;
@@ -40,6 +42,8 @@ export class Context extends Dispatcher<EventMap> {
   private _hoveredObjectId: number | null = null;
 
   private _selectedObjectId: number | null = null;
+
+  private _cssRenderer?: CSS2DRenderer;
 
   constructor() {
     super();
@@ -96,7 +100,12 @@ export class Context extends Dispatcher<EventMap> {
       canvas: canvasElement,
       antialias: true,
     });
+
     return this._renderer;
+  }
+
+  public createCssRenderer(containerElement: HTMLElement) {
+    this._cssRenderer = new CSS2DRenderer({ element: containerElement });
   }
 
   public createScene(scene: Scene) {
@@ -110,6 +119,7 @@ export class Context extends Dispatcher<EventMap> {
 
   public updateSize(width: number, height: number) {
     this._renderer?.setSize(width, height);
+    this._cssRenderer?.setSize(width, height);
     this.dispatchEvent({ type: "size-changed", width, height });
   }
 
@@ -152,10 +162,13 @@ export class Context extends Dispatcher<EventMap> {
 
     if (didUpdate) {
       this._renderer.render(this._scene, this._activeCamera);
+      this._cssRenderer?.render(this._scene, this._activeCamera);
 
       this.queueRender(this._willRender > 0);
     } else {
       this._clock.stop();
     }
+
+    this.dispatchEvent({ type: "render-end" });
   }
 }

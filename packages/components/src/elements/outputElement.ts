@@ -1,6 +1,6 @@
+import { Raycaster, Vector2 } from "three";
 import { BaseElement } from "./baseElement";
 import type { Context } from "../core/context";
-import { Raycaster, Vector2 } from "three";
 
 export class OutputElement extends BaseElement {
   constructor() {

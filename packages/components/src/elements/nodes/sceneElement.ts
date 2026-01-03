@@ -1,6 +1,5 @@
 import { Color, Scene } from "three";
 import { NodeElement } from "./nodeElement";
-import { createStyleObserver } from "../styleObserver";
 
 const styleProperties = ["background-color"];
 
@@ -16,16 +15,11 @@ export class SceneElement extends NodeElement<Scene> {
     if (context) {
       context.createScene(this.object);
     }
-
-    createStyleObserver({
-      element: this,
-      properties: styleProperties,
-      onUpdate: this.onStyleUpdate.bind(this),
-      signal: this.connectedSignal,
-    });
   }
 
-  private onStyleUpdate(property: string, value: string) {
+  override onStyleChange(property: string, value: string) {
+    super.onStyleChange(property, value);
+
     switch (property) {
       case "background-color": {
         this.object.background = new Color(value);
@@ -35,5 +29,9 @@ export class SceneElement extends NodeElement<Scene> {
       default:
         break;
     }
+  }
+
+  override getObservedStyles() {
+    return [...super.getObservedStyles(), ...styleProperties];
   }
 }
