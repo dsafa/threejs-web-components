@@ -6,6 +6,8 @@ export class GeometryElement extends BaseElement {
   protected target: Mesh | null = null;
 
   override connectedCallback() {
+    super.connectedCallback();
+
     const parentObject = getParentObject(this);
 
     if (parentObject && parentObject.object.type === "Mesh") {
@@ -22,8 +24,7 @@ export class GeometryElement extends BaseElement {
   public setGeometry(geometry: BufferGeometry) {
     if (this.target && this.target.geometry !== geometry) {
       this.target.geometry = geometry;
+      this.getRootContext()?.queueRender();
     }
-
-    this.getRootContext()?.queueRender();
   }
 }

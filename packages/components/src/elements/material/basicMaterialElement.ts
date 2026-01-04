@@ -1,5 +1,4 @@
 import { MeshBasicMaterial } from "three";
-import { createStyleObserver } from "../styleObserver";
 import { MaterialElement } from "./materialElement";
 
 const styleProperties = ["visibility", "opacity", "color"];
@@ -20,15 +19,14 @@ export class BasicMaterialElement extends MaterialElement {
       this.target.material = this._material;
     }
 
-    createStyleObserver({
-      element: this,
-      properties: styleProperties,
-      onUpdate: this.onStyleUpdate.bind(this),
-      signal: this.connectedSignal,
-    });
+    this.setDefaults();
   }
 
-  private onStyleUpdate(property: string, value: string) {
+  override getObservedStyles() {
+    return styleProperties;
+  }
+
+  override onStyleChange(property: string, value: string) {
     switch (property) {
       case "visibility": {
         this._material.visible = value === "visible";
@@ -47,5 +45,9 @@ export class BasicMaterialElement extends MaterialElement {
       default:
         break;
     }
+  }
+
+  private setDefaults() {
+    this.setAttribute("color", this._material.color.getHexString());
   }
 }

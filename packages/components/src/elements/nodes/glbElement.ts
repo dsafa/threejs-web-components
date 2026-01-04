@@ -1,7 +1,7 @@
 import { Group } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { NodeElement } from "./nodeElement";
-import type { Mesh, Object3D } from "three";
+import type { Mesh, MeshBasicMaterial, Object3D } from "three";
 import type { MeshElement } from "./meshElement";
 import type { GeometryElement } from "../geometry/geometryElement";
 import type { BasicMaterialElement } from "../material/basicMaterialElement";
@@ -58,35 +58,50 @@ export class GLBElement extends NodeElement<Group> {
       node.element.setAttribute("part", partList.join(" "));
 
       this._shadowRoot.appendChild(node.element);
-      buildDOM(node);
+
+      const styles = new CSSStyleSheet();
+      buildDOM(node, styles);
+      this._shadowRoot.adoptedStyleSheets.push(styles);
     });
   }
 }
 
-const buildDOM = (node: SceneElementNode) => {
+const buildDOM = (node: SceneElementNode, cssRules: CSSStyleSheet) => {
+  for (const rule of node.cssRules) {
+    cssRules.insertRule(rule);
+  }
+
   for (const childNode of node.children) {
     node.element.appendChild(childNode.element);
-    buildDOM(childNode);
+    buildDOM(childNode, cssRules);
   }
 };
 
 interface SceneElementNode {
   element: IBaseElement;
   children: SceneElementNode[];
+  cssRules: string[];
 }
 
 const sceneToElementNodes = (object: Object3D): SceneElementNode => {
   let element: INodeElement;
   let children: SceneElementNode[] = [];
+  let cssRules: string[] = [];
 
   switch (object.type) {
-    case "Group":
+    case "Group": {
+      element = document.createElement("twc-group") as INodeElement;
+      element.object.copy(object);
+      break;
+    }
+    case "PerspectiveCamera":
     case "Object3D": {
       element = document.createElement("twc-object3d") as INodeElement;
+      element.object.copy(object);
       break;
     }
     case "Mesh": {
-      ({ element, children } = meshToElements(object as Mesh));
+      ({ element, children, cssRules } = meshToElements(object as Mesh));
       break;
     }
     default:
@@ -105,23 +120,32 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
   return {
     element,
     children,
+    cssRules,
   };
 };
+
+const materialStyleTemplate = "twc-mesh[three-id='$id']{color:$color;}";
 
 const meshToElements = (mesh: Mesh) => {
   const meshElement = document.createElement("twc-mesh") as MeshElement;
   meshElement.object.copy(mesh);
 
-  const children = [];
+  const children: SceneElementNode[] = [];
+  const cssRules: string[] = [];
 
   if (mesh.material && !Array.isArray(mesh.material)) {
     const materialElement = document.createElement(
       "twc-basic-material"
     ) as BasicMaterialElement;
-    materialElement.style.color = "white";
     materialElement.material.copy(mesh.material);
 
-    children.push({ element: materialElement, children: [] });
+    cssRules.push(
+      materialStyleTemplate
+        .replace("$color", "#" + materialElement.material.color.getHexString())
+        .replace("$id", meshElement.object.id.toString())
+    );
+
+    children.push({ element: materialElement, children: [], cssRules: [] });
   }
 
   if (mesh.geometry) {
@@ -130,11 +154,12 @@ const meshToElements = (mesh: Mesh) => {
     ) as GeometryElement;
     geometryElement.setGeometry(mesh.geometry);
 
-    children.push({ element: geometryElement, children: [] });
+    children.push({ element: geometryElement, children: [], cssRules: [] });
   }
 
   return {
     element: meshElement,
     children,
+    cssRules,
   };
 };

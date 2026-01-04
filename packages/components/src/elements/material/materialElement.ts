@@ -6,6 +6,8 @@ export class MaterialElement extends BaseElement {
   protected target: Mesh | null = null;
 
   override connectedCallback() {
+    super.connectedCallback();
+
     const parentObject = getParentObject(this);
 
     if (parentObject && parentObject.object.type === "Mesh") {

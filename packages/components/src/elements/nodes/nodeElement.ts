@@ -1,9 +1,11 @@
-import { Matrix4, Object3D } from "three";
+import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 import { BaseElement } from "../baseElement";
 import type { INodeElement } from "./INodeElement";
 import { getParentObject } from "./nodeUtils";
 
 const styleProperties = ["transform"];
+
+const tempMatrix = new Matrix4();
 
 export abstract class NodeElement<TObjectType extends Object3D = Object3D>
   extends BaseElement
@@ -15,6 +17,12 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
 
   protected internals;
 
+  private readonly _initial = {
+    position: new Vector3(),
+    quaternion: new Quaternion(),
+    scale: new Vector3(1, 1, 1),
+  };
+
   constructor(object: TObjectType) {
     super();
 
@@ -23,6 +31,10 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
   }
 
   override connectedCallback() {
+    this._initial.position.copy(this.object.position);
+    this._initial.quaternion.copy(this.object.quaternion);
+    this._initial.scale.copy(this.object.scale);
+
     super.connectedCallback();
 
     const parent = getParentObject(this);
@@ -31,10 +43,7 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
       parent.object.add(this.object);
     }
 
-    this.setAttribute("type", this.object.type);
-    if (this.object.name) {
-      this.setAttribute("name", this.object.name);
-    }
+    this.setDefaults();
 
     const context = this.getRootContext();
     if (context) {
@@ -95,11 +104,22 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
     switch (property) {
       case "transform": {
         parseTransform(value, this.object.matrix);
-        this.object.matrix.decompose(
-          this.object.position,
-          this.object.quaternion,
-          this.object.scale
-        );
+
+        tempMatrix
+          .compose(
+            this._initial.position,
+            this._initial.quaternion,
+            this._initial.scale
+          )
+          .multiply(this.object.matrix)
+          .decompose(
+            this.object.position,
+            this.object.quaternion,
+            this.object.scale
+          );
+
+        this.object.updateMatrix();
+
         break;
       }
       default:
@@ -109,6 +129,23 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
 
   override getObservedStyles(): string[] {
     return styleProperties;
+  }
+
+  private setDefaults() {
+    this.setAttribute(
+      "position",
+      JSON.stringify(this.object.position.toArray())
+    );
+    this.setAttribute(
+      "quaternion",
+      JSON.stringify(this.object.quaternion.toArray())
+    );
+    this.setAttribute("scale", JSON.stringify(this.object.scale.toArray()));
+    this.setAttribute("three-id", this.object.id.toString());
+    this.setAttribute("type", this.object.type);
+    if (this.object.name) {
+      this.setAttribute("name", this.object.name);
+    }
   }
 }
 
