@@ -34,6 +34,12 @@
         color: black;
       }
     </style>
+    <script>
+      function onSelect(source) {
+        const glbNode = document.getElementById("glb");
+        glbNode.setAttribute("src", source.value);
+      }
+    </script>
   </head>
   <body>
     <script type="module" src="/src/main.ts"></script>
@@ -41,6 +47,7 @@
       <twc-renderer>
         <twc-scene>
           <twc-glb
+            id="glb"
             src="/GearboxAssy.glb"
             commandfor="controls"
             command="--fit"
@@ -53,6 +60,11 @@
           <canvas width="500px" height="300px"></canvas>
         </twc-output>
       </twc-renderer>
+      <select onchange="onSelect(this)">
+        <option value="/GearboxAssy.glb">Gearbox</option>
+        <option value="/BoxTextured.glb">Textured box</option>
+        <option value="/2CylinderEngine.glb">Engine</option>
+      </select>
     </div>
   </body>
 </html>

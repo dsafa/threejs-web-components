@@ -42,6 +42,8 @@ export class GLBElement extends NodeElement<Group> {
   attributeChangedCallback() {
     const src = this.getAttribute("src");
     if (src) {
+      const currentRoot = this._shadowRoot.getElementById("root");
+      currentRoot?.remove();
       this.handleLoadSrc(src);
     }
   }
@@ -64,6 +66,7 @@ export class GLBElement extends NodeElement<Group> {
       }
 
       node.element.attach(context, this);
+      node.element.id = "root";
 
       const partList = node.element.getAttribute("part")?.split(" ") ?? [];
       partList.push("root");
