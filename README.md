@@ -115,10 +115,20 @@ Supported states:
 - camera controls active: `:state(active)`
 - camera controls current action: `:state(pan) :state(rotate)`
 
-## Object click commands
+### Object click commands
 
 Objects support the `commandfor` and `command` attributes like html button elements and will call the commands on their target when clicked
 
 ## Rendering html element overlays
 
-Render html elements in the scene with `twc-html` component. This uses the [threejs css2d renderer](https://threejs.org/docs/#CSS2DRenderer)
+Render html elements in the scene with `twc-html` component. This uses the [threejs css2d renderer](https://threejs.org/docs/#CSS2DRenderer). The position of the html elements will be based on the location of the `twc-html` element in the scene
+
+```html
+<twc-mesh>
+   <twc-html>
+      <div>
+        html content that renders at the location of the mesh
+      </div>
+  </html-html>
+</twc-mesh>
+```
