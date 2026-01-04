@@ -37,3 +37,22 @@ export const invokeCommandOnTarget = (element: IBaseElement) => {
 
   return false;
 };
+
+export const adoptKeyframes = (
+  element: IBaseElement,
+  shadowRoot: ShadowRoot
+) => {
+  const keyframeRules = Array.from(
+    element.ownerDocument.styleSheets[0].cssRules
+  )
+    .flat()
+    .filter((r) => r.constructor.name === "CSSKeyframesRule");
+
+  const keyframesStyles = new CSSStyleSheet();
+
+  for (const keyframeRule of keyframeRules) {
+    keyframesStyles.insertRule(keyframeRule.cssText);
+  }
+
+  shadowRoot.adoptedStyleSheets.push(keyframesStyles);
+};

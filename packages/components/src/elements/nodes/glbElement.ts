@@ -8,7 +8,9 @@ import type { BasicMaterialElement } from "../material/basicMaterialElement";
 import type { IBaseElement } from "../IBaseElement";
 import type { INodeElement } from "./INodeElement";
 import type { StandardMaterialElement } from "../material/standardMaterialElement";
-import { invokeCommandOnTarget } from "./nodeUtils";
+import { adoptKeyframes, invokeCommandOnTarget } from "./nodeUtils";
+
+const template = `<slot/>`;
 
 export class GLBElement extends NodeElement<Group> {
   static observedAttributes = ["src"];
@@ -24,6 +26,10 @@ export class GLBElement extends NodeElement<Group> {
 
   override connectedCallback() {
     super.connectedCallback();
+
+    this._shadowRoot.innerHTML = template;
+
+    adoptKeyframes(this, this._shadowRoot);
 
     const context = this.getRootContext();
     if (!context) {
@@ -95,13 +101,13 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
   switch (object.type) {
     case "Group": {
       element = document.createElement("twc-group") as INodeElement;
-      element.object.copy(object);
+      element.object.copy(object, false);
       break;
     }
     case "PerspectiveCamera":
     case "Object3D": {
       element = document.createElement("twc-object3d") as INodeElement;
-      element.object.copy(object);
+      element.object.copy(object, false);
       break;
     }
     case "Mesh": {
@@ -135,7 +141,7 @@ const materialStyleTemplate = "twc-mesh[three-id='$id']{color:$color;}";
 
 const meshToElements = (mesh: Mesh) => {
   const meshElement = document.createElement("twc-mesh") as MeshElement;
-  meshElement.object.copy(mesh);
+  meshElement.object.copy(mesh, false);
 
   const children: SceneElementNode[] = [];
   const cssRules: string[] = [];

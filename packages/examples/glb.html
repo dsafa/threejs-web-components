@@ -6,8 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GLB</title>
     <style>
+      @keyframes anim {
+        0% {
+          transform: translateZ(0px);
+        }
+
+        100% {
+          transform: translateZ(20px) rotateZ(180deg);
+        }
+      }
+
       twc-scene {
         background-color: #eee;
+      }
+
+      twc-glb::part(Type-Mesh) {
+        animation-name: anim;
+        animation-iteration-count: infinite;
+        animation-duration: 5s;
+        animation-delay: 1s;
+        animation-direction: alternate;
+      }
+
+      twc-glb::part(Type-Mesh):state(hovered) {
+        color: black;
       }
     </style>
   </head>
