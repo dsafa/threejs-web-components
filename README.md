@@ -43,6 +43,17 @@ For the main canvas, since a html canvas can't have children, the canvas element
 
 ### Instancing
 
+Instancing can be done with the `twc-instanced-mesh` element and adding `twc-instance` elements for each instance.
+
+```html
+<twc-instanced-mesh>
+  <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+  <twc-basic-material></twc-basic-material>
+  <twc-instance></twc-instance>
+  <twc-instance></twc-instance>
+</twc-instanced-mesh>
+```
+
 ### GLB
 
 A `twc-glb` element that can be used to load a glb through the `src` attribute. The element converts the loaded glb objects into the dom elements. This means that the resulting glb element can be [styled](#styling)
@@ -57,7 +68,7 @@ Elements re-use some of the existing css properties to allow declarative styling
 - `color`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material color property
 - `opacity`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material opacity property
 - `visibility`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material visible property where visible = false if visibility == none else true
-- `transform`: This applies to any of the object3d based elements and maps to the threejs object matrix property. This will apply to the default transform of the object.
+- `transform`: This applies to any of the object3d based elements and maps to the threejs object matrix property. Also works on `twc-instance` elements. This will apply to the default transform of the object.
 
 <details>
   <summary>Notes</summary>

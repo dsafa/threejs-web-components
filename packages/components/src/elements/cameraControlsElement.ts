@@ -57,10 +57,20 @@ export class CameraControlsElement extends BaseElement {
       this._controls.connect(context.canvas);
     }
 
-    if (context.scene?.children.length) {
-      this._controls.fitToSphere(new Sphere(undefined, 20), true);
-      this._controls.rotatePolarTo(1);
+    const radiusAttribute = this.getAttribute("radius");
+    let radius = 20;
+    if (radiusAttribute) {
+      radius = Number.parseFloat(radiusAttribute);
     }
+
+    const target = new Vector3();
+    const targetAttribute = this.getArrayAttribute("target");
+    if (targetAttribute.length) {
+      target.fromArray(targetAttribute);
+    }
+
+    this._controls.fitToSphere(new Sphere(target, radius), true);
+    this._controls.rotatePolarTo(1);
 
     context.addEventListener(
       "render-start",
@@ -179,5 +189,27 @@ export class CameraControlsElement extends BaseElement {
     };
 
     this.addEventListener("command", handleCommand, { signal: abortSignal });
+  }
+
+  private getArrayAttribute(name: string) {
+    const attribute = this.getAttribute(name);
+    if (!attribute) {
+      return [];
+    }
+
+    try {
+      const value = JSON.parse(attribute);
+      if (!value) {
+        return [];
+      }
+
+      if (!Array.isArray(value)) {
+        return [];
+      }
+
+      return value;
+    } catch {
+      return [];
+    }
   }
 }
