@@ -102,6 +102,8 @@ Supported states:
 - hover: `:state(hovered)`
 - selected: `:state(selected)`
 
+TODO: Camera states
+
 ## Object click commands
 
 Objects support the `commandfor` and `command` attributes like html button elements and will call the commands on their target when clicked
