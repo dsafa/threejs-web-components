@@ -13,7 +13,6 @@ import {
   MaterialUpdateEventType,
   type MaterialUpdateEvent,
 } from "../material/materialUpdateEvent";
-import { buffer } from "three/src/nodes/TSL.js";
 
 const INITIAL_MAX_COUNT = 100;
 
