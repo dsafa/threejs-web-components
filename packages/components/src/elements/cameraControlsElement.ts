@@ -115,9 +115,9 @@ export class CameraControlsElement extends BaseElement {
     const activeCameraId = this.getAttribute("for");
 
     const cameraElement = activeCameraId
-      ? this.ownerDocument.querySelector<NodeElement<PerspectiveCamera>>(
+      ? (this.ownerDocument.getElementById(
           activeCameraId
-        )
+        ) as NodeElement<PerspectiveCamera>)
       : this.querySelector<NodeElement<PerspectiveCamera>>("[type$=Camera]");
 
     if (cameraElement) {
