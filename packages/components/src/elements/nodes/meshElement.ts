@@ -26,9 +26,13 @@ export class MeshElement extends NodeElement<Mesh> {
       { signal: this.connectedSignal }
     );
 
-    this.addEventListener(MaterialUpdateEventType, (event) => {
-      const materialEvent = event as MaterialUpdateEvent;
-      this.object.material = materialEvent.detail.material;
-    });
+    this.addEventListener(
+      MaterialUpdateEventType,
+      (event) => {
+        const materialEvent = event as MaterialUpdateEvent;
+        this.object.material = materialEvent.detail.material;
+      },
+      { signal: this.connectedSignal }
+    );
   }
 }

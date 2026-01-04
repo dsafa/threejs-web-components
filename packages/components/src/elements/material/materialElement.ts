@@ -17,7 +17,10 @@ export class MaterialElement<
   override connectedCallback() {
     super.connectedCallback();
 
-    this.setAttribute("name", this.material.name);
+    if (this.material.name) {
+      this.setAttribute("name", this.material.name);
+    }
+
     this.setAttribute("type", this.material.type);
 
     this.dispatchUpdateEvent();

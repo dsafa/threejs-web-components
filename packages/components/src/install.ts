@@ -6,6 +6,10 @@ import { BasicMaterialElement } from "./elements/material/basicMaterialElement";
 import { SceneElement } from "./elements/nodes/sceneElement";
 import { Object3dElement } from "./elements/nodes/object3dElement";
 import { MeshElement } from "./elements/nodes/meshElement";
+import {
+  InstancedMeshElement,
+  InstanceElement,
+} from "./elements/nodes/instancedMeshElement";
 import { HtmlNodeElement } from "./elements/nodes/htmlElement";
 import { PerspectiveCameraElement } from "./elements/nodes/perspectiveCameraElement";
 import { GLBElement } from "./elements/nodes/glbElement";
@@ -20,6 +24,8 @@ export const install = () => {
     ["twc-output", OutputElement],
     ["twc-object3d", Object3dElement],
     ["twc-mesh", MeshElement],
+    ["twc-instance", InstanceElement],
+    ["twc-instanced-mesh", InstancedMeshElement],
     ["twc-group", GroupElement],
     ["twc-html", HtmlNodeElement],
     ["twc-geometry", GeometryElement],
