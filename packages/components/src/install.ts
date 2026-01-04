@@ -11,6 +11,7 @@ import { PerspectiveCameraElement } from "./elements/nodes/perspectiveCameraElem
 import { GLBElement } from "./elements/nodes/glbElement";
 import { GroupElement } from "./elements/nodes/groupElement";
 import { CameraControlsElement } from "./elements/cameraControlsElement";
+import { StandardMaterialElement } from "./elements/material/standardMaterialElement";
 
 export const install = () => {
   const components: [string, typeof HTMLElement][] = [
@@ -27,6 +28,7 @@ export const install = () => {
     ["twc-camera-controls", CameraControlsElement],
     ["twc-glb", GLBElement],
     ["twc-basic-material", BasicMaterialElement],
+    ["twc-standard-material", StandardMaterialElement],
   ];
 
   for (const [name, element] of components) {

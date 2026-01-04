@@ -1,4 +1,4 @@
-import { Color, Scene } from "three";
+import { Color, DirectionalLight, HemisphereLight, Scene } from "three";
 import { NodeElement } from "./nodeElement";
 
 const styleProperties = ["background-color"];
@@ -6,6 +6,12 @@ const styleProperties = ["background-color"];
 export class SceneElement extends NodeElement<Scene> {
   constructor() {
     super(new Scene());
+
+    const env = new HemisphereLight();
+    const directional = new DirectionalLight();
+    directional.intensity = 2;
+
+    this.object.add(env, directional);
   }
 
   connectedCallback() {

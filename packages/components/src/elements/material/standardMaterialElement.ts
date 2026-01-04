@@ -1,16 +1,15 @@
-import { MeshBasicMaterial } from "three";
+import { MeshStandardMaterial } from "three";
 import { MaterialElement } from "./materialElement";
 
 const styleProperties = ["color"];
 
-export class BasicMaterialElement extends MaterialElement<MeshBasicMaterial> {
+export class StandardMaterialElement extends MaterialElement<MeshStandardMaterial> {
   constructor() {
-    super(new MeshBasicMaterial());
+    super(new MeshStandardMaterial());
   }
 
   override connectedCallback() {
     super.connectedCallback();
-    this.setDefaults();
   }
 
   override getObservedStyles() {
@@ -28,9 +27,5 @@ export class BasicMaterialElement extends MaterialElement<MeshBasicMaterial> {
       default:
         break;
     }
-  }
-
-  private setDefaults() {
-    this.setAttribute("color", this.material.color.getHexString());
   }
 }

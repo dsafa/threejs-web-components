@@ -1,12 +1,13 @@
 import { Group } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { NodeElement } from "./nodeElement";
-import type { Mesh, MeshBasicMaterial, Object3D } from "three";
+import type { Mesh, Object3D } from "three";
 import type { MeshElement } from "./meshElement";
 import type { GeometryElement } from "../geometry/geometryElement";
 import type { BasicMaterialElement } from "../material/basicMaterialElement";
 import type { IBaseElement } from "../IBaseElement";
 import type { INodeElement } from "./INodeElement";
+import type { StandardMaterialElement } from "../material/standardMaterialElement";
 
 export class GLBElement extends NodeElement<Group> {
   static observedAttributes = ["src"];
@@ -113,6 +114,9 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
   );
   element.setAttribute("part", parts.join(" "));
 
+  element.object.castShadow = true;
+  element.object.receiveShadow = true;
+
   for (const childObject of object.children) {
     children.push(sceneToElementNodes(childObject));
   }
@@ -134,18 +138,39 @@ const meshToElements = (mesh: Mesh) => {
   const cssRules: string[] = [];
 
   if (mesh.material && !Array.isArray(mesh.material)) {
-    const materialElement = document.createElement(
-      "twc-basic-material"
-    ) as BasicMaterialElement;
-    materialElement.material.copy(mesh.material);
+    if (mesh.material.type === "MeshBasicMaterial") {
+      const materialElement = document.createElement(
+        "twc-basic-material"
+      ) as BasicMaterialElement;
+      materialElement.material.copy(mesh.material);
 
-    cssRules.push(
-      materialStyleTemplate
-        .replace("$color", "#" + materialElement.material.color.getHexString())
-        .replace("$id", meshElement.object.id.toString())
-    );
+      cssRules.push(
+        materialStyleTemplate
+          .replace(
+            "$color",
+            "#" + materialElement.material.color.getHexString()
+          )
+          .replace("$id", meshElement.object.id.toString())
+      );
 
-    children.push({ element: materialElement, children: [], cssRules: [] });
+      children.push({ element: materialElement, children: [], cssRules: [] });
+    } else if (mesh.material.type === "MeshStandardMaterial") {
+      const materialElement = document.createElement(
+        "twc-standard-material"
+      ) as StandardMaterialElement;
+      materialElement.material.copy(mesh.material);
+
+      cssRules.push(
+        materialStyleTemplate
+          .replace(
+            "$color",
+            "#" + materialElement.material.color.getHexString()
+          )
+          .replace("$id", meshElement.object.id.toString())
+      );
+
+      children.push({ element: materialElement, children: [], cssRules: [] });
+    }
   }
 
   if (mesh.geometry) {
