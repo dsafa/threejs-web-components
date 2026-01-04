@@ -1,14 +1,12 @@
 import { BaseElement } from "../baseElement";
-import { getParentObject } from "../nodes/nodeUtils";
-import { Material, type Mesh } from "three";
+import { Material } from "three";
+import { MaterialUpdateEventType } from "./materialUpdateEvent";
 
 const styleProperties = ["visibility", "opacity"];
 
 export class MaterialElement<
   TMaterial extends Material = Material
 > extends BaseElement {
-  protected target: Mesh | null = null;
-
   public material: TMaterial;
 
   constructor(material: TMaterial) {
@@ -19,21 +17,10 @@ export class MaterialElement<
   override connectedCallback() {
     super.connectedCallback();
 
-    const parentObject = getParentObject(this);
-
-    if (parentObject && parentObject.object.type === "Mesh") {
-      this.target = parentObject.object as Mesh;
-      this.target.material = this.material;
-    } else {
-      console.warn("Material not attach to mesh");
-    }
-
     this.setAttribute("name", this.material.name);
     this.setAttribute("type", this.material.type);
-  }
 
-  override disconnectedCallback() {
-    this.target = null;
+    this.dispatchUpdateEvent();
   }
 
   override getObservedStyles() {
@@ -56,5 +43,14 @@ export class MaterialElement<
       default:
         break;
     }
+  }
+
+  protected dispatchUpdateEvent() {
+    this.dispatchEvent(
+      new CustomEvent(MaterialUpdateEventType, {
+        bubbles: true,
+        detail: { material: this.material },
+      })
+    );
   }
 }

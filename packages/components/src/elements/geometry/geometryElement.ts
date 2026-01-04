@@ -1,30 +1,22 @@
+import { BufferGeometry } from "three";
 import { BaseElement } from "../baseElement";
-import { getParentObject } from "../nodes/nodeUtils";
-import { BufferGeometry, type Mesh } from "three";
+import { GeometryUpdateEventType } from "./geometryUpdateEvent";
 
 export class GeometryElement extends BaseElement {
-  protected target: Mesh | null = null;
-
-  override connectedCallback() {
-    super.connectedCallback();
-
-    const parentObject = getParentObject(this);
-
-    if (parentObject && parentObject.object.type === "Mesh") {
-      this.target = parentObject.object as Mesh;
-    } else {
-      console.warn("Geometry not attach to mesh");
-    }
-  }
-
-  override disconnectedCallback() {
-    this.target = null;
-  }
+  public geometry = new BufferGeometry();
 
   public setGeometry(geometry: BufferGeometry) {
-    if (this.target && this.target.geometry !== geometry) {
-      this.target.geometry = geometry;
-      this.getRootContext()?.queueRender();
-    }
+    this.geometry = geometry;
+    this.dispatchUpdateEvent();
+    this.getRootContext()?.queueRender();
+  }
+
+  protected dispatchUpdateEvent() {
+    this.dispatchEvent(
+      new CustomEvent(GeometryUpdateEventType, {
+        bubbles: true,
+        detail: { geometry: this.geometry },
+      })
+    );
   }
 }
