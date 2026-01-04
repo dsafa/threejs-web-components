@@ -31,6 +31,21 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
   }
 
   override connectedCallback() {
+    const initialPositionAttribute = this.getArrayAttribute("position");
+    if (initialPositionAttribute.length > 2) {
+      this.object.position.fromArray(initialPositionAttribute);
+    }
+
+    const initialQuaternionAttribute = this.getArrayAttribute("quaternion");
+    if (initialQuaternionAttribute.length > 3) {
+      this.object.quaternion.fromArray(initialQuaternionAttribute);
+    }
+
+    const initialScaleAttribute = this.getArrayAttribute("scale");
+    if (initialScaleAttribute.length > 2) {
+      this.object.scale.fromArray(initialScaleAttribute);
+    }
+
     this._initial.position.copy(this.object.position);
     this._initial.quaternion.copy(this.object.quaternion);
     this._initial.scale.copy(this.object.scale);

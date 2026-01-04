@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>examples</title>
+    <style>
+      twc-renderer:has(twc-camera-controls:state(rotate)) canvas {
+        cursor: grabbing;
+      }
+
+      twc-renderer:has(twc-camera-controls:state(pan)) canvas {
+        cursor: move;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

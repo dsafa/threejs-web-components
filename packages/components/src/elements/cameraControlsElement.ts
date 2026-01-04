@@ -1,4 +1,5 @@
 import {
+  Camera,
   Vector2,
   Vector3,
   Vector4,
@@ -34,6 +35,13 @@ CameraControls.install({ THREE: subsetOfTHREE });
 
 export class CameraControlsElement extends BaseElement {
   private readonly _controls = new CameraControls(new PerspectiveCamera());
+
+  private readonly _internals;
+
+  constructor() {
+    super();
+    this._internals = this.attachInternals();
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -118,7 +126,36 @@ export class CameraControlsElement extends BaseElement {
   }
 
   private attachControlEvents(context: Context, abortSignal: AbortSignal) {
+    let active = false;
+    let action = 0;
+
     const render = () => {
+      const states = this._internals.states;
+
+      if (active !== this._controls.active) {
+        active = this._controls.active;
+        if (active) {
+          states.add("active");
+        } else {
+          states.delete("active");
+        }
+      }
+
+      if (action !== this._controls.currentAction) {
+        action = this._controls.currentAction;
+        if (action & CameraControls.ACTION.ROTATE) {
+          states.add("rotate");
+        } else {
+          states.delete("rotate");
+        }
+
+        if (action & CameraControls.ACTION.TRUCK) {
+          states.add("pan");
+        } else {
+          states.delete("pan");
+        }
+      }
+
       context.queueRender();
     };
 
@@ -189,27 +226,5 @@ export class CameraControlsElement extends BaseElement {
     };
 
     this.addEventListener("command", handleCommand, { signal: abortSignal });
-  }
-
-  private getArrayAttribute(name: string) {
-    const attribute = this.getAttribute(name);
-    if (!attribute) {
-      return [];
-    }
-
-    try {
-      const value = JSON.parse(attribute);
-      if (!value) {
-        return [];
-      }
-
-      if (!Array.isArray(value)) {
-        return [];
-      }
-
-      return value;
-    } catch {
-      return [];
-    }
   }
 }
