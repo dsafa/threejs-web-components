@@ -110,10 +110,10 @@ Supports some basic interactivity with the objects in the scene. Combined with c
 
 Supported states:
 
-- hover: `:state(hovered)`
-- selected: `:state(selected)`
-
-TODO: Camera states
+- object hover: `:state(hovered)`
+- object selected: `:state(selected)`
+- camera controls active: `:state(active)`
+- camera controls current action: `:state(pan) :state(rotate)`
 
 ## Object click commands
 

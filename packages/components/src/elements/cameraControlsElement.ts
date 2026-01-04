@@ -18,6 +18,7 @@ import type { NodeElement } from "./nodes/nodeElement";
 import { parseCommand } from "../core/command";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { isNodeElement } from "./nodes/INodeElement";
+import { time } from "three/src/nodes/TSL.js";
 
 const subsetOfTHREE = {
   Vector2: Vector2,
@@ -158,6 +159,34 @@ export class CameraControlsElement extends BaseElement {
 
       context.queueRender();
     };
+
+    if (context.canvas) {
+      let timeout: number = 0;
+
+      context.canvas.addEventListener(
+        "wheel",
+        (event) => {
+          if (timeout) {
+            return;
+          }
+
+          this._internals.states.add("dolly");
+          const direction = event.deltaY > 0 ? "dolly-out" : "dolly-in";
+          this._internals.states.add(direction);
+
+          timeout = window.setTimeout(() => {
+            timeout = 0;
+            this._internals.states.delete("dolly");
+            this._internals.states.delete(direction);
+          }, 200);
+        },
+        {
+          signal: this.connectedSignal,
+          capture: true,
+          passive: true,
+        }
+      );
+    }
 
     this._controls.addEventListener("update", render);
     this._controls.addEventListener("wake", render);

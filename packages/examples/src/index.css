@@ -1,0 +1,19 @@
+twc-renderer:has(twc-camera-controls:state(rotate)) canvas {
+  cursor: grabbing;
+}
+
+twc-renderer:has(twc-camera-controls:state(pan)) canvas {
+  cursor: move;
+}
+
+twc-renderer:has(twc-camera-controls:state(dolly-in)) canvas {
+  cursor: zoom-in;
+}
+
+twc-renderer:has(twc-camera-controls:state(dolly-out)) canvas {
+  cursor: zoom-out;
+}
+
+twc-mesh {
+  color: white;
+}
