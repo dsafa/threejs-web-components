@@ -7,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   build: {
+    sourcemap: true,
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "components",
@@ -14,7 +15,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rolldownOptions: {
-      external: ["three", /three\//, "camera-controls"],
+      external: ["three", /three\//, "camera-controls", "style-observer"],
       output: {
         globals: { THREE: "three" },
       },
