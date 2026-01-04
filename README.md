@@ -94,8 +94,8 @@ Some elements support commands using the [Invoke Commands API](https://developer
 
 `twc-camera-controls` supports these commands:
 
-- `--fit` To fit an object or the scene into view
-- `--rotate` To rotate the current camera orbit
+- `--fit` To fit an object or the scene into view. If the invoker source is a scene object element, then it fits to that object, otherwise the scene.
+- `--rotate` To rotate the current camera orbit by some delta.
 
 Other elements also support invoking commands:
 

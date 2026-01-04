@@ -42,6 +42,8 @@ export class GLBElement extends NodeElement<Group> {
   attributeChangedCallback() {
     const src = this.getAttribute("src");
     if (src) {
+      const currentRoot = this._shadowRoot.getElementById("root");
+      currentRoot?.remove();
       this.handleLoadSrc(src);
     }
   }
@@ -58,12 +60,13 @@ export class GLBElement extends NodeElement<Group> {
         return;
       }
 
-      const node = sceneToElementNodes(object.scene);
+      const node = sceneToElementNodes(object.scene, 0);
       if (!node) {
         return;
       }
 
       node.element.attach(context, this);
+      node.element.id = "root";
 
       const partList = node.element.getAttribute("part")?.split(" ") ?? [];
       partList.push("root");
@@ -97,7 +100,10 @@ interface SceneElementNode {
   cssRules: string[];
 }
 
-const sceneToElementNodes = (object: Object3D): SceneElementNode | null => {
+const sceneToElementNodes = (
+  object: Object3D,
+  depth: number
+): SceneElementNode | null => {
   let element: INodeElement;
   let children: SceneElementNode[] = [];
   let cssRules: string[] = [];
@@ -124,16 +130,19 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode | null => {
       throw new Error("Unhandled type " + object.type);
   }
 
-  const parts = [`Type-${element.object.type}`, element.object.name].filter(
-    Boolean
-  );
+  const parts = [
+    `Type-${element.object.type}`,
+    `Depth-${depth}`,
+    object.children.length === 0 && "Leaf",
+    element.object.name,
+  ].filter(Boolean);
   element.setAttribute("part", parts.join(" "));
 
   element.object.castShadow = true;
   element.object.receiveShadow = true;
 
   for (const childObject of object.children) {
-    const childNode = sceneToElementNodes(childObject);
+    const childNode = sceneToElementNodes(childObject, depth + 1);
     if (childNode) {
       children.push(childNode);
     }
