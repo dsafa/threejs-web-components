@@ -16,7 +16,11 @@
     <div>
       <twc-renderer>
         <twc-scene>
-          <twc-glb src="/2CylinderEngine.glb"></twc-glb>
+          <twc-glb
+            src="/GearboxAssy.glb"
+            commandfor="controls"
+            command="--fit"
+          ></twc-glb>
           <twc-camera-controls id="controls">
             <twc-perspective-camera></twc-perspective-camera>
           </twc-camera-controls>
@@ -26,6 +30,5 @@
         </twc-output>
       </twc-renderer>
     </div>
-    <button type="button" commandfor="controls" command="--fit">Fit</button>
   </body>
 </html>

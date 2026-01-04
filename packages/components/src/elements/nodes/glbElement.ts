@@ -8,6 +8,7 @@ import type { BasicMaterialElement } from "../material/basicMaterialElement";
 import type { IBaseElement } from "../IBaseElement";
 import type { INodeElement } from "./INodeElement";
 import type { StandardMaterialElement } from "../material/standardMaterialElement";
+import { invokeCommandOnTarget } from "./nodeUtils";
 
 export class GLBElement extends NodeElement<Group> {
   static observedAttributes = ["src"];
@@ -63,6 +64,8 @@ export class GLBElement extends NodeElement<Group> {
       const styles = new CSSStyleSheet();
       buildDOM(node, styles);
       this._shadowRoot.adoptedStyleSheets.push(styles);
+
+      invokeCommandOnTarget(this);
     });
   }
 }

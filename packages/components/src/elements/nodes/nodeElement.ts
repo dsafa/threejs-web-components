@@ -1,7 +1,8 @@
 import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 import { BaseElement } from "../baseElement";
 import type { INodeElement } from "./INodeElement";
-import { getParentObject } from "./nodeUtils";
+import { getParentObject, invokeCommandOnTarget } from "./nodeUtils";
+import { element } from "three/src/nodes/TSL.js";
 
 const styleProperties = ["transform"];
 
@@ -77,17 +78,11 @@ export abstract class NodeElement<TObjectType extends Object3D = Object3D>
         "on-object-click",
         ({ objectId }) => {
           const isThisObject = objectId === this.object.id;
-          const command = this.getAttribute("command");
-          const commandFor = this.getAttribute("commandfor");
-          const commandForTarget = commandFor
-            ? this.ownerDocument.getElementById(commandFor)
-            : null;
-
-          if (isThisObject && command && commandForTarget) {
-            commandForTarget.dispatchEvent(
-              new CommandEvent("command", { command, source: this })
-            );
+          if (!isThisObject) {
+            return;
           }
+
+          invokeCommandOnTarget(this);
         },
         { signal: this.connectedSignal }
       );

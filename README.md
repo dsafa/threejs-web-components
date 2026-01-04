@@ -20,7 +20,7 @@ Elements re-use some of the existing css properties to allow declarative styling
 - `color`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material color property
 - `opacity`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material opacity property
 - `visibility`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material visible property where visible = false if visibility == none else true
-- `transform`: This applies to any of the object3d based elements and maps to the threejs object matrix property
+- `transform`: This applies to any of the object3d based elements and maps to the threejs object matrix property. This will apply to the default transform of the object.
 
 ### Animations
 
@@ -34,6 +34,11 @@ Some elements support commands using the [Invoke Commands API](https://developer
 
 - `--fit` To fit an object or the scene into view
 - `--rotate` To rotate the current camera orbit
+
+Other elements also support invoking commands:
+
+- Objects in the scene: see [Object click commands](#object-click-commands)
+- `twc-glb`: invokes the command on load
 
 ## Interactivity
 
