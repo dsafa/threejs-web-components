@@ -6,6 +6,32 @@ experimenting with webcomponents and threejs
 
 ## Scene
 
+Declaratively build the scene with basic object3d elements like object3d and meshes. Also includes elements for materials and geometries for meshes.
+
+```html
+<twc-scene>
+  <twc-mesh>
+    <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+    <twc-basic-material></twc-basic-material>
+  </twc-mesh>
+  <twc-camera-controls>
+    <twc-perspective-camera></twc-perspective-camera>
+  </twc-camera-controls>
+</twc-scene>
+```
+
+Camera controls also have an element which can be used for additional features (read more below)
+
+Then the `twc-output` element can be used to output to a `canvas` element
+
+```html
+<twc-renderer>
+  <twc-output>
+    <canvas width="500px" height="300px"></canvas>
+  </twc-output>
+</twc-renderer>
+```
+
 ### Instancing
 
 ### GLB
@@ -25,6 +51,9 @@ Elements re-use some of the existing css properties to allow declarative styling
 ### Animations
 
 Because these values are controlled by css, animations can be used the change those values
+
+> [!TIP]
+> Didn't work or try this, but could probably animate the camera this way if interactive camera controls aren't used
 
 ## Commands
 
