@@ -28,11 +28,7 @@ export class BoxGeometryElement extends GeometryElement {
     const height = this.getDimension("height");
     const depth = this.getDimension("depth");
 
-    if (this.target) {
-      this.target.geometry = new BoxGeometry(width, height, depth);
-    }
-
-    this.getRootContext()?.queueRender();
+    this.setGeometry(new BoxGeometry(width, height, depth));
   }
 
   private getDimension(name: string) {

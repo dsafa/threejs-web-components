@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLB</title>
+    <style>
+      @keyframes anim {
+        0%,
+        10% {
+          transform: translateZ(0px);
+        }
+
+        90%,
+        100% {
+          transform: translateZ(20px) rotateZ(180deg);
+        }
+      }
+
+      twc-scene {
+        background-color: #eee;
+      }
+
+      twc-glb::part(Type-Mesh) {
+        animation-name: anim;
+        animation-iteration-count: infinite;
+        animation-duration: 5s;
+        animation-delay: 1s;
+        animation-direction: alternate;
+      }
+
+      twc-glb::part(Type-Mesh):state(hovered) {
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="/src/main.ts"></script>
+    <div>
+      <twc-renderer>
+        <twc-scene>
+          <twc-glb
+            src="/GearboxAssy.glb"
+            commandfor="controls"
+            command="--fit"
+          ></twc-glb>
+          <twc-camera-controls id="controls">
+            <twc-perspective-camera></twc-perspective-camera>
+          </twc-camera-controls>
+        </twc-scene>
+        <twc-output>
+          <canvas width="500px" height="300px"></canvas>
+        </twc-output>
+      </twc-renderer>
+    </div>
+  </body>
+</html>

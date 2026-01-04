@@ -1,4 +1,11 @@
-import { Camera, Clock, Scene, Vector2, WebGLRenderer } from "three";
+import {
+  Camera,
+  Clock,
+  LoadingManager,
+  Scene,
+  Vector2,
+  WebGLRenderer,
+} from "three";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { Dispatcher } from "./dispatcher";
 
@@ -45,6 +52,8 @@ export class Context extends Dispatcher<EventMap> {
 
   private _cssRenderer?: CSS2DRenderer;
 
+  private _loadingManager = new LoadingManager();
+
   constructor() {
     super();
   }
@@ -59,6 +68,10 @@ export class Context extends Dispatcher<EventMap> {
 
   public get canvas() {
     return this._renderer?.domElement;
+  }
+
+  public get loadingManager() {
+    return this._loadingManager;
   }
 
   public get hoveredObjectId() {

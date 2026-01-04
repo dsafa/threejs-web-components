@@ -23,12 +23,16 @@ export class BaseElement extends HTMLElement implements IBaseElement {
   connectedCallback() {
     this._abortController = new AbortController();
 
-    createStyleObserver({
-      element: this,
-      properties: this.getObservedStyles(),
-      onUpdate: this.onStyleChange.bind(this),
-      signal: this.connectedSignal,
-    });
+    const observedStyles = this.getObservedStyles();
+
+    if (observedStyles.length > 0) {
+      createStyleObserver({
+        element: this,
+        properties: this.getObservedStyles(),
+        onUpdate: this.onStyleChange.bind(this),
+        signal: this.connectedSignal,
+      });
+    }
   }
 
   disconnectedCallback() {
@@ -44,7 +48,11 @@ export class BaseElement extends HTMLElement implements IBaseElement {
     return this._accessor.getAncestor();
   }
 
-  protected onStyleChange(property: string, value: string) {}
+  public attach(context: Context, ancestor: IBaseElement) {
+    this._accessor.attach(context, ancestor);
+  }
+
+  protected onStyleChange(_property: string, _value: string) {}
 
   protected getObservedStyles(): string[] {
     return [];

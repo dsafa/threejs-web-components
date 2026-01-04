@@ -15,6 +15,7 @@ export class PerspectiveCameraElement extends NodeElement<PerspectiveCamera> {
       return;
     }
 
+    this.object.far = 5000;
     context.addEventListener(
       "size-changed",
       ({ height, width }) => {
