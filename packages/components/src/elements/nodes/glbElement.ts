@@ -59,6 +59,10 @@ export class GLBElement extends NodeElement<Group> {
       }
 
       const node = sceneToElementNodes(object.scene);
+      if (!node) {
+        return;
+      }
+
       node.element.attach(context, this);
 
       const partList = node.element.getAttribute("part")?.split(" ") ?? [];
@@ -93,7 +97,7 @@ interface SceneElementNode {
   cssRules: string[];
 }
 
-const sceneToElementNodes = (object: Object3D): SceneElementNode => {
+const sceneToElementNodes = (object: Object3D): SceneElementNode | null => {
   let element: INodeElement;
   let children: SceneElementNode[] = [];
   let cssRules: string[] = [];
@@ -104,7 +108,6 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
       element.object.copy(object, false);
       break;
     }
-    case "PerspectiveCamera":
     case "Object3D": {
       element = document.createElement("twc-object3d") as INodeElement;
       element.object.copy(object, false);
@@ -113,6 +116,9 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
     case "Mesh": {
       ({ element, children, cssRules } = meshToElements(object as Mesh));
       break;
+    }
+    case "PerspectiveCamera": {
+      return null;
     }
     default:
       throw new Error("Unhandled type " + object.type);
@@ -127,7 +133,10 @@ const sceneToElementNodes = (object: Object3D): SceneElementNode => {
   element.object.receiveShadow = true;
 
   for (const childObject of object.children) {
-    children.push(sceneToElementNodes(childObject));
+    const childNode = sceneToElementNodes(childObject);
+    if (childNode) {
+      children.push(childNode);
+    }
   }
 
   return {

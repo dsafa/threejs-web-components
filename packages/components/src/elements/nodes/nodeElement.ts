@@ -2,7 +2,6 @@ import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 import { BaseElement } from "../baseElement";
 import type { INodeElement } from "./INodeElement";
 import { getParentObject, invokeCommandOnTarget } from "./nodeUtils";
-import { element } from "three/src/nodes/TSL.js";
 
 const styleProperties = ["transform"];
 
