@@ -1,5 +1,4 @@
 import {
-  Camera,
   Vector2,
   Vector3,
   Vector4,
@@ -18,7 +17,6 @@ import type { NodeElement } from "./nodes/nodeElement";
 import { parseCommand } from "../core/command";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { isNodeElement } from "./nodes/INodeElement";
-import { time } from "three/src/nodes/TSL.js";
 
 const subsetOfTHREE = {
   Vector2: Vector2,
