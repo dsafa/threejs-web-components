@@ -1,6 +1,6 @@
 # threejs-web-components
 
-experimenting with webcomponents and threejs
+Experimenting with webcomponents and threejs to explore the limits and usability for interactive apps. This is not meant to be a usable library or anything and is just for playing around with different ideas.
 
 # Features
 
