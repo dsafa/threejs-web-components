@@ -4,8 +4,8 @@ import { defineConfig } from "vite";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
-  base: "/threejs-web-components/",
+export default defineConfig(({ command }) => ({
+  base: command === "build" ? "/threejs-web-components/" : undefined,
   build: {
     rolldownOptions: {
       input: {
@@ -29,4 +29,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
