@@ -20,7 +20,7 @@ Declaratively build the scene with basic object3d elements like object3d and mes
 </twc-scene>
 ```
 
-Camera controls also have an element which can be used for additional features (read more below)
+Camera controls also have an element which can be used for additional features such as an invocation target for [commands](#commands)
 
 Then the `twc-output` element can be used to output to a `canvas` element
 
@@ -148,10 +148,8 @@ Render html elements in the scene with `twc-html` component. This uses the [thre
 
 ```html
 <twc-mesh>
-   <twc-html>
-      <div>
-        html content that renders at the location of the mesh
-      </div>
-  </html-html>
+  <twc-html>
+    <div>html content that renders at the location of the mesh</div>
+  </twc-html>
 </twc-mesh>
 ```
