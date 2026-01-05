@@ -163,6 +163,7 @@ export class CameraControlsElement extends BaseElement {
         });
       }
 
+      updateStates(stateUpdates);
       context.queueRender();
     };
 
