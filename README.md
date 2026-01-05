@@ -2,6 +2,8 @@
 
 Experimenting with webcomponents and threejs to explore the limits and usability for interactive apps. This is not meant to be a usable library or anything and is just for playing around with different ideas.
 
+https://dsafa.github.io/threejs-web-components/
+
 # Features
 
 ## Scene
@@ -54,13 +56,19 @@ Instancing can be done with the `twc-instanced-mesh` element and adding `twc-ins
 </twc-instanced-mesh>
 ```
 
+[Example](https://dsafa.github.io/threejs-web-components/instancing.html)
+
 ### GLB
 
 A `twc-glb` element that can be used to load a glb through the `src` attribute. The element converts the loaded glb objects into the dom elements. This means that the resulting glb element can be [styled](#styling)
 
+[Example](https://dsafa.github.io/threejs-web-components/glb.html)
+
 ## Styling
 
 Elements re-use some of the existing css properties to allow declarative styling
+
+[Example](https://dsafa.github.io/threejs-web-components/styling.html)
 
 ### Properties
 
@@ -125,6 +133,8 @@ Other elements also support invoking commands:
 - Objects in the scene: see [Object click commands](#object-click-commands)
 - `twc-glb`: invokes the command on load
 
+[Example](https://dsafa.github.io/threejs-web-components/commands.html)
+
 ## Interactivity
 
 ### Custom element states
@@ -142,6 +152,8 @@ Supported states:
 
 Objects support the `commandfor` and `command` attributes like html button elements and will call the commands on their target when clicked
 
+[Example](https://dsafa.github.io/threejs-web-components/interactive.html)
+
 ## Rendering html element overlays
 
 Render html elements in the scene with `twc-html` component. This uses the [threejs css2d renderer](https://threejs.org/docs/#CSS2DRenderer). The position of the html elements will be based on the location of the `twc-html` element in the scene
@@ -153,3 +165,5 @@ Render html elements in the scene with `twc-html` component. This uses the [thre
   </twc-html>
 </twc-mesh>
 ```
+
+[Example](https://dsafa.github.io/threejs-web-components/html-elements.html)
