@@ -62,6 +62,12 @@ Instancing can be done with the `twc-instanced-mesh` element and adding `twc-ins
 
 A `twc-glb` element that can be used to load a glb through the `src` attribute. The element converts the loaded glb objects into the dom elements. This means that the resulting glb element can be [styled](#styling)
 
+```html
+<twc-scene>
+  <twc-glb id="glb" src="file.glb"></twc-glb>
+</twc-scene>
+```
+
 [Example](https://dsafa.github.io/threejs-web-components/glb.html)
 
 ## Styling
@@ -77,6 +83,14 @@ Elements re-use some of the existing css properties to allow declarative styling
 - `opacity`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material opacity property
 - `visibility`: This applies to the `twc-basic-material` element which maps to the threejs mesh basic material visible property where visible = false if visibility == none else true
 - `transform`: This applies to any of the object3d based elements and maps to the threejs object matrix property. Also works on `twc-instance` elements. This will apply to the default transform of the object.
+
+```css
+twc-mesh {
+  color: white;
+  transform: translate3d(10px, 0px, 0px);
+  opacity: 0.5;
+}
+```
 
 <details>
   <summary>Notes</summary>
@@ -128,6 +142,13 @@ Some elements support commands using the [Invoke Commands API](https://developer
 - `--fit` To fit an object or the scene into view. If the invoker source is a scene object element, then it fits to that object, otherwise the scene.
 - `--rotate` To rotate the current camera orbit by some delta.
 
+```html
+<button type="button" commandfor="controls" command="--fit">Fit</button>
+<button type="button" commandfor="controls" command="--rotate:polar=20">
+  Rotate
+</button>
+```
+
 Other elements also support invoking commands:
 
 - Objects in the scene: see [Object click commands](#object-click-commands)
@@ -137,9 +158,11 @@ Other elements also support invoking commands:
 
 ## Interactivity
 
+[Example](https://dsafa.github.io/threejs-web-components/interactive.html)
+
 ### Custom element states
 
-Supports some basic interactivity with the objects in the scene. Combined with css styling, we can style meshes based on some states.
+Supports some basic interactivity with the objects in the scene. Combined with [css styling](#styling), we can style meshes based on some states.
 
 Supported states:
 
@@ -148,11 +171,22 @@ Supported states:
 - camera controls active: `:state(active)`
 - camera controls current action: `:state(pan) :state(rotate)`
 
+```css
+twc-mesh:state(hovered) {
+  color: red;
+}
+```
+
 ### Object click commands
 
 Objects support the `commandfor` and `command` attributes like html button elements and will call the commands on their target when clicked
 
-[Example](https://dsafa.github.io/threejs-web-components/interactive.html)
+```html
+<twc-mesh id="two" commandfor="controls" command="--fit">
+  <twc-box-geometry width="5" height="5" depth="5"></twc-box-geometry>
+  <twc-basic-material></twc-basic-material>
+</twc-mesh>
+```
 
 ## Rendering html element overlays
 
