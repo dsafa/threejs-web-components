@@ -42,9 +42,8 @@ export const adoptKeyframes = (
   element: IBaseElement,
   shadowRoot: ShadowRoot
 ) => {
-  const keyframeRules = Array.from(
-    element.ownerDocument.styleSheets[0].cssRules
-  )
+  const keyframeRules = Array.from(element.ownerDocument.styleSheets)
+    .map((s) => Array.from(s.cssRules))
     .flat()
     .filter((r) => r.constructor.name === "CSSKeyframesRule");
 

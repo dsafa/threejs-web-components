@@ -21,8 +21,6 @@ export class OutputElement extends BaseElement {
     }
   }
 
-  disconnectedCallback() {}
-
   private setup(context: Context, canvas: HTMLCanvasElement) {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];

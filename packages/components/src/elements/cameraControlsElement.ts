@@ -35,6 +35,14 @@ CameraControls.install({ THREE: subsetOfTHREE });
 export class CameraControlsElement extends BaseElement {
   private readonly _controls = new CameraControls(new PerspectiveCamera());
 
+  private readonly _internals;
+
+  constructor() {
+    super();
+    this._internals = this.attachInternals();
+    this._controls.dollyToCursor = true;
+  }
+
   override connectedCallback() {
     super.connectedCallback();
 
@@ -106,9 +114,9 @@ export class CameraControlsElement extends BaseElement {
     const activeCameraId = this.getAttribute("for");
 
     const cameraElement = activeCameraId
-      ? this.ownerDocument.querySelector<NodeElement<PerspectiveCamera>>(
+      ? (this.ownerDocument.getElementById(
           activeCameraId
-        )
+        ) as NodeElement<PerspectiveCamera>)
       : this.querySelector<NodeElement<PerspectiveCamera>>("[type$=Camera]");
 
     if (cameraElement) {
@@ -118,9 +126,78 @@ export class CameraControlsElement extends BaseElement {
   }
 
   private attachControlEvents(context: Context, abortSignal: AbortSignal) {
+    let active = false;
+    let action = 0;
+
+    const updateStates = (
+      updates: Array<{ state: string; enabled: boolean }>
+    ) => {
+      const states = this._internals.states;
+
+      for (const { enabled, state } of updates) {
+        if (enabled) {
+          states.add(state);
+        } else {
+          states.delete(state);
+        }
+      }
+    };
+
     const render = () => {
+      const stateUpdates: Array<{ state: string; enabled: boolean }> = [];
+      if (active !== this._controls.active) {
+        active = this._controls.active;
+        stateUpdates.push({ enabled: active, state: "active" });
+      }
+
+      if (action !== this._controls.currentAction) {
+        action = this._controls.currentAction;
+        stateUpdates.push({
+          enabled: !!(action & CameraControls.ACTION.ROTATE),
+          state: "rotate",
+        });
+
+        stateUpdates.push({
+          enabled: !!(action & CameraControls.ACTION.TRUCK),
+          state: "pan",
+        });
+      }
+
+      updateStates(stateUpdates);
       context.queueRender();
     };
+
+    if (context.canvas) {
+      let timeout: number = 0;
+      let direction: "dolly-out" | "dolly-in" = "dolly-in";
+
+      context.canvas.addEventListener(
+        "wheel",
+        (event) => {
+          this._internals.states.add("dolly");
+          const nextDirection = event.deltaY > 0 ? "dolly-out" : "dolly-in";
+
+          if (timeout && nextDirection === direction) {
+            return;
+          }
+
+          this._internals.states.delete(direction);
+          direction = nextDirection;
+          this._internals.states.add(direction);
+
+          timeout = window.setTimeout(() => {
+            timeout = 0;
+            this._internals.states.delete("dolly");
+            this._internals.states.delete(direction);
+          }, 200);
+        },
+        {
+          signal: this.connectedSignal,
+          capture: true,
+          passive: true,
+        }
+      );
+    }
 
     this._controls.addEventListener("update", render);
     this._controls.addEventListener("wake", render);
@@ -189,27 +266,5 @@ export class CameraControlsElement extends BaseElement {
     };
 
     this.addEventListener("command", handleCommand, { signal: abortSignal });
-  }
-
-  private getArrayAttribute(name: string) {
-    const attribute = this.getAttribute(name);
-    if (!attribute) {
-      return [];
-    }
-
-    try {
-      const value = JSON.parse(attribute);
-      if (!value) {
-        return [];
-      }
-
-      if (!Array.isArray(value)) {
-        return [];
-      }
-
-      return value;
-    } catch {
-      return [];
-    }
   }
 }

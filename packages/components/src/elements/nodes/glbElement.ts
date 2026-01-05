@@ -19,6 +19,8 @@ export class GLBElement extends NodeElement<Group> {
 
   private readonly _shadowRoot;
 
+  private _loadingController: AbortController | null = null;
+
   constructor() {
     super(new Group());
     this._shadowRoot = this.attachShadow({ mode: "open" });
@@ -42,25 +44,34 @@ export class GLBElement extends NodeElement<Group> {
   attributeChangedCallback() {
     const src = this.getAttribute("src");
     if (src) {
+      this._loadingController?.abort(new Error("Canceled"));
+      this._loadingController = new AbortController();
       const currentRoot = this._shadowRoot.getElementById("root");
       currentRoot?.remove();
-      this.handleLoadSrc(src);
+      this.handleLoadSrc(
+        src,
+        AbortSignal.any([this._loadingController.signal, this.connectedSignal])
+      );
     }
   }
 
-  private handleLoadSrc(src: string) {
+  private async handleLoadSrc(src: string, signal: AbortSignal) {
     const context = this.getRootContext();
     if (!context) {
       return;
     }
 
-    const signal = this.connectedSignal;
-    this._loader.load(src, (object) => {
+    try {
+      this.internals.states.add("loading");
+      this.internals.states.delete("loaded");
+      this.internals.states.delete("error");
+
+      const gltf = await this._loader.loadAsync(src);
       if (signal.aborted) {
         return;
       }
 
-      const node = sceneToElementNodes(object.scene, 0);
+      const node = sceneToElementNodes(gltf.scene, 0);
       if (!node) {
         return;
       }
@@ -78,8 +89,14 @@ export class GLBElement extends NodeElement<Group> {
       buildDOM(node, styles);
       this._shadowRoot.adoptedStyleSheets.push(styles);
 
+      this.internals.states.add("loaded");
+
       invokeCommandOnTarget(this);
-    });
+    } catch {
+      this.internals.states.add("error");
+    } finally {
+      this.internals.states.delete("loading");
+    }
   }
 }
 

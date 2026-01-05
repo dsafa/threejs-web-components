@@ -85,8 +85,31 @@ Since the default css color is black, a lot of meshes by default will show up as
 
 Because these values are controlled by css, animations can be used the change those values
 
-> [!TIP]
-> Didn't work or try this, but could probably animate the camera this way if interactive camera controls aren't used
+```css
+@keyframes colors {
+  0% {
+    color: white;
+  }
+
+  100% {
+    color: gray;
+  }
+}
+
+twc-basic-material {
+  animation-name: colors;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-duration: 3s;
+}
+```
+
+<details>
+  <summary>Notes</summary>
+
+Didn't work or try this, but could probably animate the camera this way if interactive camera controls aren't used
+
+</details>
 
 ## Commands
 
@@ -110,15 +133,25 @@ Supports some basic interactivity with the objects in the scene. Combined with c
 
 Supported states:
 
-- hover: `:state(hovered)`
-- selected: `:state(selected)`
+- object hover: `:state(hovered)`
+- object selected: `:state(selected)`
+- camera controls active: `:state(active)`
+- camera controls current action: `:state(pan) :state(rotate)`
 
-TODO: Camera states
-
-## Object click commands
+### Object click commands
 
 Objects support the `commandfor` and `command` attributes like html button elements and will call the commands on their target when clicked
 
 ## Rendering html element overlays
 
-Render html elements in the scene with `twc-html` component. This uses the [threejs css2d renderer](https://threejs.org/docs/#CSS2DRenderer)
+Render html elements in the scene with `twc-html` component. This uses the [threejs css2d renderer](https://threejs.org/docs/#CSS2DRenderer). The position of the html elements will be based on the location of the `twc-html` element in the scene
+
+```html
+<twc-mesh>
+   <twc-html>
+      <div>
+        html content that renders at the location of the mesh
+      </div>
+  </html-html>
+</twc-mesh>
+```

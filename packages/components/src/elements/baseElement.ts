@@ -57,4 +57,26 @@ export class BaseElement extends HTMLElement implements IBaseElement {
   protected getObservedStyles(): string[] {
     return [];
   }
+
+  protected getArrayAttribute(name: string) {
+    const attribute = this.getAttribute(name);
+    if (!attribute) {
+      return [];
+    }
+
+    try {
+      const value = JSON.parse(attribute);
+      if (!value) {
+        return [];
+      }
+
+      if (!Array.isArray(value)) {
+        return [];
+      }
+
+      return value;
+    } catch {
+      return [];
+    }
+  }
 }
