@@ -40,6 +40,7 @@ export class CameraControlsElement extends BaseElement {
   constructor() {
     super();
     this._internals = this.attachInternals();
+    this._controls.dollyToCursor = true;
   }
 
   override connectedCallback() {
@@ -128,31 +129,38 @@ export class CameraControlsElement extends BaseElement {
     let active = false;
     let action = 0;
 
-    const render = () => {
+    const updateStates = (
+      updates: Array<{ state: string; enabled: boolean }>
+    ) => {
       const states = this._internals.states;
 
+      for (const { enabled, state } of updates) {
+        if (enabled) {
+          states.add(state);
+        } else {
+          states.delete(state);
+        }
+      }
+    };
+
+    const render = () => {
+      const stateUpdates: Array<{ state: string; enabled: boolean }> = [];
       if (active !== this._controls.active) {
         active = this._controls.active;
-        if (active) {
-          states.add("active");
-        } else {
-          states.delete("active");
-        }
+        stateUpdates.push({ enabled: active, state: "active" });
       }
 
       if (action !== this._controls.currentAction) {
         action = this._controls.currentAction;
-        if (action & CameraControls.ACTION.ROTATE) {
-          states.add("rotate");
-        } else {
-          states.delete("rotate");
-        }
+        stateUpdates.push({
+          enabled: !!(action & CameraControls.ACTION.ROTATE),
+          state: "rotate",
+        });
 
-        if (action & CameraControls.ACTION.TRUCK) {
-          states.add("pan");
-        } else {
-          states.delete("pan");
-        }
+        stateUpdates.push({
+          enabled: !!(action & CameraControls.ACTION.TRUCK),
+          state: "pan",
+        });
       }
 
       context.queueRender();
@@ -160,16 +168,20 @@ export class CameraControlsElement extends BaseElement {
 
     if (context.canvas) {
       let timeout: number = 0;
+      let direction: "dolly-out" | "dolly-in" = "dolly-in";
 
       context.canvas.addEventListener(
         "wheel",
         (event) => {
-          if (timeout) {
+          this._internals.states.add("dolly");
+          const nextDirection = event.deltaY > 0 ? "dolly-out" : "dolly-in";
+
+          if (timeout && nextDirection === direction) {
             return;
           }
 
-          this._internals.states.add("dolly");
-          const direction = event.deltaY > 0 ? "dolly-out" : "dolly-in";
+          this._internals.states.delete(direction);
+          direction = nextDirection;
           this._internals.states.add(direction);
 
           timeout = window.setTimeout(() => {
